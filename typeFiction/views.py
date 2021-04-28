@@ -1,10 +1,15 @@
+import json
+import markdown2
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
-from .models import User
+from .models import User, Story, Profile, Category
 
 
 def index(request):
@@ -61,3 +66,20 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "typefiction/register.html")
+
+
+# STORY
+@login_required
+def create(request):
+    # Must be request via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request only."}, status=400)
+    # Create new story
+    title = request.POST.get("title")
+    description = request.POST.get("description")
+    category = request.POST.get("category")
+    story = Post(author=request.user, title=title, description=description, category=category)
+    post.save()
+    # redirect to profile page after post is created
+    return redirect('profile', user_id=request.user.id)
+    # return JsonResponse({"message": "Post created successfully"}, status=201)
