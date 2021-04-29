@@ -110,14 +110,14 @@ def submit_chapter(request, story_id):
     s = Story.objects.get(id=story_id)
     new_chapter = Chapter(content = c, chapter = n)
     new_chapter.save()
-    story.chapter.add(new_chapter)
+    s.chapters.add(new_chapter)
     return redirect("story", story_id)
 
 
 def story(request, story_id):
     try:
         story = Story.objects.get(id=story_id)
-        chapters = story.chapter_set.all()
+        chapters = story.chapters.all()
     except Story.DoesNotExist:
         return redirect("/")
     context = {'story': story, 'chapters': chapters}

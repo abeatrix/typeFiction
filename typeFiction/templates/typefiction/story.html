@@ -3,8 +3,11 @@
 
 {% block body %}
     {% include 'typefiction/components/thread.html' %}
-    {% include 'typefiction/components/newChapter.html' %}
+    <div class="container my-3">
     {% for c in chapters %}
         {{c.chapter}}
+        {{c.content| safe }}
     {% endfor %}
+    </div>
+    {% include 'typefiction/components/newChapter.html' %}
 {% endblock %}

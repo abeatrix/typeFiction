@@ -1,3 +1,4 @@
+{% if user.is_authenticated %}
 <form class="p-2" method="POST" action="{% url "submit_cat" %}">
     {% csrf_token %}
     <label for="msg" class="form-label">New Category</label>
@@ -6,3 +7,4 @@
         <button type="submit" class="btn btn-primary rounded-pill p-2">Submit</button>
     </div>
 </form>
+{% endif %}
