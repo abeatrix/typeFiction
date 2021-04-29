@@ -1,10 +1,11 @@
+{% load static %}
 <div class="container my-2 border border-primary">
     <div class="row">
         <div class="col-1">
-            Picture
+            <img class="p-1" src="{% static 'typefiction/application.png' %}" width="70px">
         </div>
         <div class="col">
-            <p><a href="{% url "story" story.id %}">{{story.title}}</a> by {{story.author}}</p>
+            <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a></p>
             <p>{{story.description}}</p>
         </div>
         <div class="col-1">
