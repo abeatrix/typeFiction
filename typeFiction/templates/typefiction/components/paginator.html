@@ -1,0 +1,32 @@
+{% if stories.has_other_pages %}
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if stories.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ stories.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1">Previous</a>
+        </li>
+        {% endif %}
+        {% for i in stories.paginator.page_range %}
+        {% if stories.number == i %}
+        <li class="page-item"><a class="page-link">{{ i }}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+        {% if stories.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ stories.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% endif %}

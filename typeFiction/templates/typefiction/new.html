@@ -1,0 +1,10 @@
+{% extends "typefiction/layout.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        {% include 'typefiction/components/newCat.html' %}
+        {% include 'typefiction/components/newStory.html' %}
+    {% endif %}
+{% endblock %}

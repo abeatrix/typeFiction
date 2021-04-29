@@ -7,14 +7,23 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import User, Story, Profile, Category, Chapter
 from .forms import Story_Form
 
+# HOME PAGE
 def index(request):
     form = Story_Form()
-    stories = Story.objects.all()
+    story_list = Story.objects.all()
+    page = request.GET.get('page', 1)
+    paginator = Paginator(story_list, 20)
+    try:
+        stories = paginator.page(page)
+    except PageNotAnInteger:
+        stories = paginator.page(1)
+    except EmptyPage:
+        stories = paginator.page(paginator.num_pages)
     context = {'form': form, 'stories': stories}
     return render(request, "typefiction/index.html",context)
 
@@ -98,6 +107,7 @@ def submit_story(request):
             return redirect("story", story_id=new_story.id)
     return redirect("/")
 
+
 # Create new Chapter
 @login_required
 def submit_chapter(request, story_id):
@@ -112,6 +122,7 @@ def submit_chapter(request, story_id):
     new_chapter.save()
     s.chapters.add(new_chapter)
     return redirect("story", story_id)
+
 
 # VIEW STORY PAGE
 def story(request, story_id):
@@ -135,6 +146,13 @@ def profile(request, user_id):
     context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower}
     return render(request, 'typefiction/profile.html', context)
 
+
+
+# NEW STORY PAGE
+def new(request):
+    form = Story_Form()
+    context = {'form': form}
+    return render(request, "typefiction/new.html", context)
 
 # FOLLOW
 @csrf_exempt
