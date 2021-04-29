@@ -4,8 +4,9 @@
             Picture
         </div>
         <div class="col-6">
-            Details
+            <p>{{story.title}} by {{story.author}}</p>
+            <p>{{story.description}}</p>
         </div>
     </div>
-    Category - Chapters: X - Words: X - Published: X
+    Category: {{story.category}} - Chapters: {{story.chapter|length}} - Words: X - Published: {{story.post_date}}
 </div>

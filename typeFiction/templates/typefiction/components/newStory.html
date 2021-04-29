@@ -4,7 +4,6 @@
 
 {% block body %}
     {% if user.is_authenticated %}
-    {% include 'typefiction/components/newCat.html' %}
     <form class="p-2" method="POST" action="{% url "submit_story" %}">
         {% csrf_token %}
         {{ form|crispy }}
@@ -13,7 +12,4 @@
         </div>
     </form>
     {% endif %}
-    {% for story in stories%}
-        {% include 'typefiction/components/thread.html' %}
-    {% endfor %}
 {% endblock %}
