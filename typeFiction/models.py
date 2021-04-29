@@ -34,11 +34,12 @@ class Chapter(models.Model):
     
     def __str__(self):
         return self.chapter
-
+        
 # Story
 class Story(models.Model):
     title = models.TextField(max_length=50, default=None)
     description = models.TextField(max_length=100, default=None)
+    cover = models.URLField()
     chapters = models.ManyToManyField(Chapter)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name='category', default=None)
     post_date = models.DateTimeField(auto_now_add=True)
@@ -48,3 +49,20 @@ class Story(models.Model):
 
     def __str__(self):
         return self.description
+
+    class Meta:
+        ordering = ['-post_date']
+
+# COMMENTS
+class Comment(models.Model):
+    comment = models.TextField(max_length=500, blank=False)
+    comment_date = models.DateTimeField(auto_now_add=True)
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reply = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, related_name='replies', blank=True)
+
+    def __str__(self):
+        return f"{self.comment} posted {self.comment_date}"
+
+    class Meta:
+        ordering = ['-comment_date']
