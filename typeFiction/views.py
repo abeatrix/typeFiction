@@ -113,7 +113,7 @@ def submit_chapter(request, story_id):
     s.chapters.add(new_chapter)
     return redirect("story", story_id)
 
-
+# VIEW STORY PAGE
 def story(request, story_id):
     try:
         story = Story.objects.get(id=story_id)
@@ -122,3 +122,69 @@ def story(request, story_id):
         return redirect("/")
     context = {'story': story, 'chapters': chapters}
     return render(request, 'typefiction/story.html', context)
+
+# PROFILE PAGE
+def profile(request, user_id):
+    try:
+        profile = User.objects.get(id=user_id).profile
+        stories = Story.objects.filter(author_id=user_id).order_by("post_date")
+        following = list(profile.following.all())
+        follower = Profile.objects.filter(following=profile.user)
+    except User.DoesNotExist:
+        return redirect("/")
+    context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower}
+    return render(request, 'typefiction/profile.html', context)
+
+
+# FOLLOW
+@csrf_exempt
+@login_required
+def follow(request, user_id):
+    # check if requester is in the follower list or not
+    if request.method == "PUT":
+        # users cannot follow themselves
+        if request.user.id != user_id:
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                JsonResponse({"error": "Cannot find user."}, status=400)
+            following = request.user.profile.following.all()
+            if user in following:
+                request.user.profile.following.remove(user_id)
+                return JsonResponse({"msg": "Follow"})
+            else:
+                request.user.profile.following.add(user_id)
+                return JsonResponse({"msg": "Unfollow"})
+        JsonResponse({"error": "Cannot follow yourself."}, status=400)
+    # GET method to check follower status
+    # then have frontend display accordingly
+    elif request.method == "GET":
+        user = User.objects.get(id=user_id)
+        following = request.user.profile.following.all()
+        if user in following:
+            return JsonResponse({"msg": "Unfollow"})
+        else:
+            return JsonResponse({"msg": "Follow"})
+    return redirect("/")
+
+
+# LIKES
+@csrf_exempt
+@login_required
+def likes(request, story_id):
+    if request.method == "PUT":
+        try:
+            story = Story.objects.get(id=story_id)
+        except Story.DoesNotExist:
+            JsonResponse({"error": "Cannot find story."}, status=400)
+        # If user already liked the story => unlike
+        if request.user in story.likes.all():
+            story.likes.remove(request.user)
+            count = story.likes.count()
+            return JsonResponse({"likes": count})
+        # like
+        else:
+            story.likes.add(request.user.id)
+            count = story.likes.count()
+            return JsonResponse({"likes": count})
+    return JsonResponse({"error": "PUT request only"}, status=400)

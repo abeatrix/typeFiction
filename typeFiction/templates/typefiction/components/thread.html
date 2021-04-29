@@ -8,8 +8,33 @@
             <p>{{story.description}}</p>
         </div>
         <div class="col-1">
-            <i class="fas fa-heart mx-1"></i><i class="fas fa-plus"></i>
+            <i class="fas fa-heart mx-1" id="like-btn-{{story.id}}"></i><i class="fas fa-plus"></i>
         </div>
     </div>
-    Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date}}
+    Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date}} - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Favorite: {{story.watchlist.count}}
 </div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const story_id = {{story.id}}
+        {% if user.is_authenticated %}
+            document.querySelector('#like-btn-{{story.id}}').addEventListener('click', () => go_like(story_id));
+        {% endif %}
+    });
+
+    function go_like(story_id){
+        // select like number element by id
+        const btn = document.querySelector(`#like-btn-${story_id}`);
+        const l = document.querySelector(`#story-${story_id}-likes`);
+        // perform
+        fetch(`/likes/${story_id}`, {
+            method: 'PUT',
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            l.innerHTML = data.likes;
+        })
+        .catch(err=>console.log(err));
+    }
+</script>

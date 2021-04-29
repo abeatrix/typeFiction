@@ -28,7 +28,7 @@
                     </li>
                 </ul>
                 {% if user.is_authenticated %}
-                <a class="nav-link" href="#"><strong>{{ user.username }}</strong></a>
+                <a class="nav-link" href="{% url 'profile' user.id %}"><strong>{{ user.username }}</strong></a>
                 <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
                 {% else %}
                 <form class="form-inline my-2 my-lg-0" action="{% url 'login' %}" method="post">
