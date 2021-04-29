@@ -9,8 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import User, Story, Profile, Category, Chapter
-from .forms import Story_Form
+from .models import User, Story, Profile, Category, Chapter, Comment
+from .forms import Story_Form, Comment_Form
 
 # HOME PAGE
 def index(request):
@@ -27,6 +27,9 @@ def index(request):
     context = {'form': form, 'stories': stories}
     return render(request, "typefiction/index.html",context)
 
+
+
+# ------- AUTH -------#
 
 def login_view(request):
     if request.method == "POST":
@@ -80,6 +83,9 @@ def register(request):
         return render(request, "typefiction/register.html")
 
 
+
+# ------- CATEGORY -------#
+
 # Create new Category
 @login_required
 def submit_cat(request):
@@ -91,6 +97,9 @@ def submit_cat(request):
     cat.save()
     return redirect("/")
 
+
+
+# ------- STORY -------#
 
 # Create new STORY
 @login_required
@@ -129,10 +138,50 @@ def story(request, story_id):
     try:
         story = Story.objects.get(id=story_id)
         chapters = story.chapters.all()
+        comments = Comment.objects.filter(story_id=story_id, reply=None)
+    except Comment.DoesNotExist:
+        comments = None
     except Story.DoesNotExist:
         return redirect("/")
     context = {'story': story, 'chapters': chapters}
     return render(request, 'typefiction/story.html', context)
+
+
+# NEW STORY PAGE
+def new(request):
+    form = Story_Form()
+    context = {'form': form}
+    return render(request, "typefiction/new.html", context)
+
+
+# ------- COMMENTS -------#
+
+# Create Comments
+@login_required
+def submit_comment(request, story_id):
+    comment_form = Comment_Form(data=request.POST)
+    story = Story.objects.get(id=story_id)
+    if comment_form.is_valid():
+        new_comment = comment_form.save(commit=False)
+        new_comment.user = request.user
+        new_comment.story_id = story_id
+        new_comment.story = story
+        new_comment.save()
+        return redirect('story_detail', story_id=story_id)
+
+
+# Delete Comment
+@login_required
+def delete_comment(request, story_id, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    if comment.user == request.user:
+        Comment.objects.get(id=comment_id).delete()
+        return redirect('story_detail', story_id=story_id)
+    return redirect('story_detail', story_id=story_id)
+
+
+
+# ------- PROFILE -------#
 
 # PROFILE PAGE
 def profile(request, user_id):
@@ -146,13 +195,6 @@ def profile(request, user_id):
     context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower}
     return render(request, 'typefiction/profile.html', context)
 
-
-
-# NEW STORY PAGE
-def new(request):
-    form = Story_Form()
-    context = {'form': form}
-    return render(request, "typefiction/new.html", context)
 
 # FOLLOW
 @csrf_exempt
