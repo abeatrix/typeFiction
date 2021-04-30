@@ -40,6 +40,7 @@ class Story(models.Model):
     title = models.TextField(max_length=50, default=None)
     description = models.TextField(max_length=250, default=None)
     cover = models.URLField()
+    completed = models.BooleanField(default=False)
     chapters = models.ManyToManyField(Chapter)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name='category', default=None)
     post_date = models.DateTimeField(auto_now_add=True)
