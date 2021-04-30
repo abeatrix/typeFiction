@@ -1,0 +1,13 @@
+{% load crispy_forms_tags %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+    <form class="p-2" method="POST" action="{% url "submit_story" %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="text-right py-2">
+            <button type="submit" class="btn btn-primary rounded-pill p-2">Submit</button>
+        </div>
+    </form>
+    {% endif %}
+{% endblock %}

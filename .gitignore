@@ -1,0 +1,5 @@
+finalproject/settings.py
+finalproject/__pycache__
+db.sqlite3
+typeFiction/migrations
+typeFiction/__pycache__

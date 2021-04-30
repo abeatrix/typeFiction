@@ -1,1 +1,13 @@
-{% include 'typefiction/components/thread.html' %}
+{% extends "typefiction/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {% include 'typefiction/components/thread.html' %}
+    <div class="container my-3">
+    {% for c in chapters %}
+        {{c.chapter}}
+        {{c.content| safe }}
+    {% endfor %}
+    </div>
+    {% include 'typefiction/components/newChapter.html' %}
+{% endblock %}
