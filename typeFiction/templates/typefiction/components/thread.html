@@ -1,17 +1,12 @@
 {% load static %}
 <div class="container my-2 border border-primary">
     <div class="row">
-        <div class="col-1">
-            <a href="{% url "story" story.id %}">
-                <img class="p-1" src="{% static 'typefiction/application.png' %}" width="70px">
-            </a>
-        </div>
         <div class="col">
-            <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> <strong class="text-success">reviews</strong></p>
+            <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> <a class="text-success" href="{% url "story" story.id %}#reviews" id="title-link"><strong>reviews</strong></a></p>
             <p>{{story.description}}</p>
         </div>
         <div class="col-1">
-            <i class="fas fa-heart mx-1" id="like-btn-{{story.id}}"></i><i class="fas fa-plus"></i>
+            <button class="btn btn-link" id="like-btn-{{story.id}}"><i class="fas fa-heart pr-3"></i></button>
         </div>
     </div>
     <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Favorite: {{story.watchlist.count}}</small>

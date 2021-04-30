@@ -38,7 +38,7 @@ class Chapter(models.Model):
 # Story
 class Story(models.Model):
     title = models.TextField(max_length=50, default=None)
-    description = models.TextField(max_length=100, default=None)
+    description = models.TextField(max_length=250, default=None)
     cover = models.URLField()
     chapters = models.ManyToManyField(Chapter)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name='category', default=None)

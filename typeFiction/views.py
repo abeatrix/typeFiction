@@ -143,7 +143,7 @@ def story(request, story_id):
         comments = None
     except Story.DoesNotExist:
         return redirect("/")
-    context = {'story': story, 'chapters': chapters}
+    context = {'story': story, 'chapters': chapters, 'comments': comments}
     return render(request, 'typefiction/story.html', context)
 
 
@@ -167,7 +167,7 @@ def submit_comment(request, story_id):
         new_comment.story_id = story_id
         new_comment.story = story
         new_comment.save()
-        return redirect('story_detail', story_id=story_id)
+        return redirect('story', story_id=story_id)
 
 
 # Delete Comment
@@ -176,8 +176,8 @@ def delete_comment(request, story_id, comment_id):
     comment = Comment.objects.get(id=comment_id)
     if comment.user == request.user:
         Comment.objects.get(id=comment_id).delete()
-        return redirect('story_detail', story_id=story_id)
-    return redirect('story_detail', story_id=story_id)
+        return redirect('story', story_id=story_id)
+    return redirect('story', story_id=story_id)
 
 
 

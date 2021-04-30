@@ -3,11 +3,21 @@
 
 {% block body %}
     {% include 'typefiction/components/thread.html' %}
-    <div class="container my-3">
     {% for c in chapters %}
-        {{c.chapter}}
-        {{c.content| safe }}
+    <div class="container my-5">
+        <h1>Chapter: {{c.chapter}}</h1>
+        <p>{{c.content| safe }}</p>
+    </div>
+    {% endfor %}
+    {% include 'typefiction/components/newComment.html' %}
+    <!-- {% include 'typefiction/components/newChapter.html' %} -->
+    <div class="container my-3">
+        <a name="reviews"><h3 class="border-bottom mb-3">Reviews</h3></a>
+    {% for com in comments %}
+    <div  class="border-bottom">
+        <p>{{com.comment}}</p>
+        <small>Reviewed by {{com.user}} {{com.comment_date|timesince}} ago</small>
+    </div>
     {% endfor %}
     </div>
-    {% include 'typefiction/components/newChapter.html' %}
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.forms import ModelForm, ModelChoiceField
-from .models import Profile, Category, Story, Chapter
+from .models import Profile, Category, Story, Chapter, Comment
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django import forms
@@ -10,7 +10,7 @@ class Story_Form(ModelForm):
 
     class Meta:
         model = Story
-        fields = ['title', 'description', 'category']
+        fields = ['category', 'title', 'description']
 
 # Form for creating Chapter in Story
 class Chapter_Form(ModelForm):
