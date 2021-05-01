@@ -1,5 +1,6 @@
 {% extends "typefiction/layout.html" %}
 {% load static %}
+{% block title %}: {{profile}}'s profile{% endblock %}
 
 {% block body %}
     {% if request.user.id != profile.id and user.is_authenticated %} 
@@ -18,3 +19,50 @@
     {% endif %} -->
 {% endblock %}
 
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const profile_id = {{profile.id}}
+
+        {% if request.user.id != profile.id and user.is_authenticated %} 
+            follow_status(profile_id)
+            document.querySelector('#follow-btn-{{profile.id}}').addEventListener('click', () => go_follow(profile_id));
+        {% endif %}
+    });
+
+    function go_follow(user_id){
+        // select follow button by element id
+        const f = document.querySelector(`#follow-btn-${user_id}`);
+        // select follow number by element id
+        const numElm = document.querySelector(`#follower-num-${user_id}`);
+        const num = parseInt(numElm.innerHTML)
+        // perform PUT
+        fetch('/follows/'+user_id, {
+            method: 'PUT',
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            // update button text
+            f.innerHTML = data.msg
+            // update follower number
+            numElm.innerHTML = f.innerHTML === "Follow" ? num-1 : num+1;
+        })
+        .catch(err=>console.log(err));
+    }
+
+    function follow_status(user_id) {
+        // select follow button by element id
+        const f = document.querySelector(`#follow-btn-${user_id}`);
+        // perform GET
+        fetch('/follows/'+user_id, {
+            method: 'GET',
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            // update button text
+            f.innerHTML = data.msg
+        })
+        .catch(err=>console.log(err));
+    }
+</script>
+{% endblock %}

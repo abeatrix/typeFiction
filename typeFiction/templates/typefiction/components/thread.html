@@ -1,34 +1,47 @@
 {% load static %}
 <div class="container my-2 border border-primary">
     <div class="row">
-        <div class="col-1">
-            <a href="{% url "story" story.id %}">
-                <img class="p-1" src="{% static 'typefiction/application.png' %}" width="70px">
-            </a>
-        </div>
         <div class="col">
-            <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> <strong class="text-success">reviews</strong></p>
+            <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> <a class="text-success" href="{% url "story" story.id %}#reviews" id="title-link"><strong>reviews</strong></a></p>
             <p>{{story.description}}</p>
         </div>
-        <div class="col-1">
-            <i class="fas fa-heart mx-1" id="like-btn-{{story.id}}"></i><i class="fas fa-plus"></i>
+        {% if user.is_authenticated %} 
+        <div class="col-2 text-right">
+            {% if request.user != story.author %} 
+            <button class="btn btn-link" id="watch-btn-{{story.id}}"><i id="watch-icon-{{story.id}}" class="far fa-eye"></i></button>
+            {% endif %}
+            <button class="btn btn-link" id="like-btn-{{story.id}}"><i id="like-icon-{{story.id}}" class="fas fa-heart"></i></button>
         </div>
+        {% endif %}
     </div>
-    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Favorite: {{story.watchlist.count}}</small>
+    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Watcher: <span id="story-{{story.id}}-watch">{{story.watchlist.count}}</span></small>
 </div>
 
-
+<!-- implement javascript to use django templates variable -->
 <script>
     document.addEventListener("DOMContentLoaded", function(){
         const story_id = {{story.id}}
         {% if user.is_authenticated %}
             document.querySelector('#like-btn-{{story.id}}').addEventListener('click', () => go_like(story_id));
+            // Show watch button only for users that are not the author
+            {% if request.user != story.author %} 
+            document.querySelector('#watch-btn-{{story.id}}').addEventListener('click', () => add_watchlist(story_id));
+            {% endif %}
+            // Turn Like button color to red if the user has liked the story
+            {% if request.user in story.likes.all %}
+            document.querySelector(`#like-icon-{{story.id}}`).classList.add("text-danger")
+            {% endif %}
+            // Turn Watch button color to red if the user is watching the story
+            {% if request.user in story.watchlist.all %}
+            document.querySelector(`#watch-icon-{{story.id}}`).classList.add("text-danger")
+            {% endif %}
         {% endif %}
     });
 
     function go_like(story_id){
-        // select like number element by id
+        // select like button element by id
         const btn = document.querySelector(`#like-btn-${story_id}`);
+        // select like count element by id
         const l = document.querySelector(`#story-${story_id}-likes`);
         // perform
         fetch(`/likes/${story_id}`, {
@@ -37,7 +50,39 @@
         .then(res=>res.json())
         .then(data=>{
             l.innerHTML = data.likes;
+            check_likes(story_id);
         })
         .catch(err=>console.log(err));
+    }
+
+    function add_watchlist(story_id){
+        // select watch button element by id
+        const wbtn = document.querySelector(`#watch-btn-${story_id}`);
+        // select watcher number element by id
+        const w = document.querySelector(`#story-${story_id}-watch`);
+        // perform
+        fetch(`/watchlist/${story_id}`, {
+            method: 'PUT',
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            w.innerHTML = data.count;
+            check_watchlist(story_id);
+        })
+        .catch(err=>console.log(err));
+    }
+
+    function check_likes(story_id){
+        // select like icon by id
+        const l_icon = document.querySelector(`#like-icon-${story_id}`);
+        // toggle between classes
+        l_icon.classList.contains("text-danger") ? l_icon.classList.remove("text-danger") : l_icon.classList.add("text-danger");
+    }
+
+    function check_watchlist(story_id){
+        // select like icon by id
+        const w_icon = document.querySelector(`#watch-icon-${story_id}`);
+        // toggle between classes
+        w_icon.classList.contains("text-danger") ? w_icon.classList.remove("text-danger") : w_icon.classList.add("text-danger");
     }
 </script>

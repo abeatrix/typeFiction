@@ -101,6 +101,27 @@ def submit_cat(request):
 
 # ------- STORY -------#
 
+# VIEW STORY PAGE
+def story(request, story_id):
+    try:
+        story = Story.objects.get(id=story_id)
+        chapters = story.chapters.all()
+        comments = Comment.objects.filter(story_id=story_id, reply=None)
+    except Comment.DoesNotExist:
+        comments = None
+    except Story.DoesNotExist:
+        return redirect("/")
+    context = {'story': story, 'chapters': chapters, 'comments': comments}
+    return render(request, 'typefiction/story.html', context)
+
+
+# NEW STORY PAGE
+def new(request):
+    form = Story_Form()
+    context = {'form': form}
+    return render(request, "typefiction/new.html", context)
+
+
 # Create new STORY
 @login_required
 def submit_story(request):
@@ -127,31 +148,27 @@ def submit_chapter(request, story_id):
     n = request.POST["chapter"]
     c = request.POST["content"]
     s = Story.objects.get(id=story_id)
-    new_chapter = Chapter(content = c, chapter = n)
+    new_chapter = Chapter(content = c, chapter = n, story = s)
     new_chapter.save()
     s.chapters.add(new_chapter)
     return redirect("story", story_id)
 
 
-# VIEW STORY PAGE
-def story(request, story_id):
-    try:
-        story = Story.objects.get(id=story_id)
-        chapters = story.chapters.all()
-        comments = Comment.objects.filter(story_id=story_id, reply=None)
-    except Comment.DoesNotExist:
-        comments = None
-    except Story.DoesNotExist:
-        return redirect("/")
-    context = {'story': story, 'chapters': chapters}
-    return render(request, 'typefiction/story.html', context)
+# EDIT STORY
+# @login_required
+# def story_edit(request, story_id):
+#     # Must be request via PUT
+#     story = Story.objects.get(id=story_id)
+#     if request.method == "POST" and request.user == story.author:
+#         story_form = Story_Form(request.POST, instance=story)
+#         if story_form.is_valid():
+#             story_form.save()
+#             return redirect('story', story_id)
+#     elif request.method == "GET" and request.user == story.author:
+#         story_form = Story_Form(instance=story)
+#         context = {'form'=story_form, 'story'=story}
+#         return render(request, "typefiction/new.html", context)
 
-
-# NEW STORY PAGE
-def new(request):
-    form = Story_Form()
-    context = {'form': form}
-    return render(request, "typefiction/new.html", context)
 
 
 # ------- COMMENTS -------#
@@ -167,7 +184,7 @@ def submit_comment(request, story_id):
         new_comment.story_id = story_id
         new_comment.story = story
         new_comment.save()
-        return redirect('story_detail', story_id=story_id)
+        return redirect('story', story_id=story_id)
 
 
 # Delete Comment
@@ -176,8 +193,8 @@ def delete_comment(request, story_id, comment_id):
     comment = Comment.objects.get(id=comment_id)
     if comment.user == request.user:
         Comment.objects.get(id=comment_id).delete()
-        return redirect('story_detail', story_id=story_id)
-    return redirect('story_detail', story_id=story_id)
+        return redirect('story', story_id=story_id)
+    return redirect('story', story_id=story_id)
 
 
 
@@ -196,10 +213,10 @@ def profile(request, user_id):
     return render(request, 'typefiction/profile.html', context)
 
 
-# FOLLOW
+# FOLLOWS
 @csrf_exempt
 @login_required
-def follow(request, user_id):
+def follows(request, user_id):
     # check if requester is in the follower list or not
     if request.method == "PUT":
         # users cannot follow themselves
@@ -244,7 +261,30 @@ def likes(request, story_id):
             return JsonResponse({"likes": count})
         # like
         else:
-            story.likes.add(request.user.id)
+            story.likes.add(request.user)
             count = story.likes.count()
             return JsonResponse({"likes": count})
     return JsonResponse({"error": "PUT request only"}, status=400)
+
+# ADD TO WATCHLIST
+@csrf_exempt
+@login_required
+def watchlist(request, story_id):
+    # check if requester is in the follower list or not
+    if request.method == "PUT":
+        try:
+            story = Story.objects.get(id=story_id)
+        except Story.DoesNotExist:
+            JsonResponse({"error": "Cannot find story."}, status=400)
+        # users cannot follow themselves
+        if request.user.id != story.author.id:
+            watchers= story.watchlist.all()
+            if request.user in watchers:
+                story.watchlist.remove(request.user)
+                msg = "Add to Watchlist"
+            else:
+                story.watchlist.add(request.user)
+                msg = "Remove from Watchlist"
+            return JsonResponse({"msg": msg, "count": story.watchlist.count()})
+        JsonResponse({"error": "Cannot add your own story to watchlist."}, status=400)
+    return redirect("/")

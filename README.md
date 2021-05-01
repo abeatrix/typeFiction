@@ -4,3 +4,4 @@
 1. Run `python3 manage.py runserver` to start server
 1. pip3 install django-crispy-forms
 1. pip3 install markdown2
+1. Setting.py + CRISPY_TEMPLATE_PACK = 'bootstrap4'
