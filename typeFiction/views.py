@@ -127,7 +127,7 @@ def submit_chapter(request, story_id):
     n = request.POST["chapter"]
     c = request.POST["content"]
     s = Story.objects.get(id=story_id)
-    new_chapter = Chapter(content = c, chapter = n)
+    new_chapter = Chapter(content = c, chapter = n, story = s)
     new_chapter.save()
     s.chapters.add(new_chapter)
     return redirect("story", story_id)
@@ -196,10 +196,10 @@ def profile(request, user_id):
     return render(request, 'typefiction/profile.html', context)
 
 
-# FOLLOW
+# FOLLOWS
 @csrf_exempt
 @login_required
-def follow(request, user_id):
+def follows(request, user_id):
     # check if requester is in the follower list or not
     if request.method == "PUT":
         # users cannot follow themselves

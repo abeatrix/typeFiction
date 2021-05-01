@@ -1,5 +1,5 @@
 {% extends "typefiction/layout.html" %}
-{% load static %}
+{% block title %}: {{story}}{% endblock %}
 
 {% block body %}
     {% include 'typefiction/components/thread.html' %}
@@ -10,13 +10,13 @@
     </div>
     {% endfor %}
     {% include 'typefiction/components/newComment.html' %}
-    <!-- {% include 'typefiction/components/newChapter.html' %} -->
+    {% include 'typefiction/components/newChapter.html' %}
     <div class="container my-3">
         <a name="reviews"><h3 class="border-bottom mb-3">Reviews</h3></a>
     {% for com in comments %}
     <div  class="border-bottom">
         <p>{{com.comment}}</p>
-        <small>Reviewed by {{com.user}} {{com.comment_date|timesince}} ago</small>
+        <small>Reviewed by {{com.user}} {{com.post_date|timesince}} ago</small>
     </div>
     {% endfor %}
     </div>

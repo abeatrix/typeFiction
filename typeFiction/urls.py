@@ -16,4 +16,6 @@ urlpatterns = [
     path("submit_comment/<int:story_id>", views.submit_comment, name="submit_comment"),
     # LIKES
     path("likes/<int:story_id>", views.likes, name="likes"),
+    # FOLLOWS
+    path("follows/<int:user_id>", views.follows, name="follows"),
 ]
