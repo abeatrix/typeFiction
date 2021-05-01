@@ -244,7 +244,30 @@ def likes(request, story_id):
             return JsonResponse({"likes": count})
         # like
         else:
-            story.likes.add(request.user.id)
+            story.likes.add(request.user)
             count = story.likes.count()
             return JsonResponse({"likes": count})
     return JsonResponse({"error": "PUT request only"}, status=400)
+
+# ADD TO WATCHLIST
+@csrf_exempt
+@login_required
+def watchlist(request, story_id):
+    # check if requester is in the follower list or not
+    if request.method == "PUT":
+        try:
+            story = Story.objects.get(id=story_id)
+        except Story.DoesNotExist:
+            JsonResponse({"error": "Cannot find story."}, status=400)
+        # users cannot follow themselves
+        if request.user.id != story.author.id:
+            watchers= story.watchlist.all()
+            if request.user in watchers:
+                story.watchlist.remove(request.user)
+                msg = "Add to Watchlist"
+            else:
+                story.watchlist.add(request.user)
+                msg = "Remove from Watchlist"
+            return JsonResponse({"msg": msg, "count": story.watchlist.count()})
+        JsonResponse({"error": "Cannot add your own story to watchlist."}, status=400)
+    return redirect("/")

@@ -1,5 +1,6 @@
 {% extends "typefiction/layout.html" %}
 {% load static %}
+{% block title %}: {{profile}}'s profile{% endblock %}
 
 {% block body %}
     {% if request.user.id != profile.id and user.is_authenticated %} 

@@ -18,4 +18,6 @@ urlpatterns = [
     path("likes/<int:story_id>", views.likes, name="likes"),
     # FOLLOWS
     path("follows/<int:user_id>", views.follows, name="follows"),
+    # WATCHLIST
+    path("watchlist/<int:story_id>", views.watchlist, name="watchlist"),
 ]
