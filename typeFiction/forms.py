@@ -26,3 +26,10 @@ class Comment_Form(ModelForm):
     class Meta:
         model = Comment
         fields = ['comment']
+
+# Form for updating User's profile
+class Profile_Form(ModelForm):
+    
+    class Meta:
+        model = Profile
+        fields = ['displayname', 'image']

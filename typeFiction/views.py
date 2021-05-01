@@ -101,6 +101,27 @@ def submit_cat(request):
 
 # ------- STORY -------#
 
+# VIEW STORY PAGE
+def story(request, story_id):
+    try:
+        story = Story.objects.get(id=story_id)
+        chapters = story.chapters.all()
+        comments = Comment.objects.filter(story_id=story_id, reply=None)
+    except Comment.DoesNotExist:
+        comments = None
+    except Story.DoesNotExist:
+        return redirect("/")
+    context = {'story': story, 'chapters': chapters, 'comments': comments}
+    return render(request, 'typefiction/story.html', context)
+
+
+# NEW STORY PAGE
+def new(request):
+    form = Story_Form()
+    context = {'form': form}
+    return render(request, "typefiction/new.html", context)
+
+
 # Create new STORY
 @login_required
 def submit_story(request):
@@ -133,25 +154,21 @@ def submit_chapter(request, story_id):
     return redirect("story", story_id)
 
 
-# VIEW STORY PAGE
-def story(request, story_id):
-    try:
-        story = Story.objects.get(id=story_id)
-        chapters = story.chapters.all()
-        comments = Comment.objects.filter(story_id=story_id, reply=None)
-    except Comment.DoesNotExist:
-        comments = None
-    except Story.DoesNotExist:
-        return redirect("/")
-    context = {'story': story, 'chapters': chapters, 'comments': comments}
-    return render(request, 'typefiction/story.html', context)
+# EDIT STORY
+# @login_required
+# def story_edit(request, story_id):
+#     # Must be request via PUT
+#     story = Story.objects.get(id=story_id)
+#     if request.method == "POST" and request.user == story.author:
+#         story_form = Story_Form(request.POST, instance=story)
+#         if story_form.is_valid():
+#             story_form.save()
+#             return redirect('story', story_id)
+#     elif request.method == "GET" and request.user == story.author:
+#         story_form = Story_Form(instance=story)
+#         context = {'form'=story_form, 'story'=story}
+#         return render(request, "typefiction/new.html", context)
 
-
-# NEW STORY PAGE
-def new(request):
-    form = Story_Form()
-    context = {'form': form}
-    return render(request, "typefiction/new.html", context)
 
 
 # ------- COMMENTS -------#
