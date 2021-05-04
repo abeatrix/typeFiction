@@ -3,19 +3,19 @@
 {% block title %}: {{profile}}'s profile{% endblock %}
 
 {% block body %}
-    <div class="row">
+    <div class="row my-3">
         <div class="col">
             <h3 id="profile-card-{{profile.id}}">{{profile}}'s profile</h3> 
         </div>
 
         {% if request.user.id != profile.id and user.is_authenticated %} 
-        <div class="col-2 text-right">
-            <div class="text-right"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
+        <div class="col-2 text-left">
+            <div class="text-left"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
         </div>
         {% endif %}
     </div>
     
-    <h5><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
+    <h5 class="my-3"><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
     {% for story in stories%}
         {% if story.chapters.count > 0 %}
             {% include 'typefiction/components/thread.html' %}

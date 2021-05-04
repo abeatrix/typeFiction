@@ -1,5 +1,5 @@
 {% load static %}
-<div class="container my-2 border border-primary">
+<div class="container my-3 border border-primary">
     <div class="row">
         <div class="col">
             <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> <a class="text-success" href="{% url "story" story.id %}#reviews" id="title-link"><strong>reviews</strong></a></p>
