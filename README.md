@@ -42,7 +42,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 - [x] Stories can have multiple chapters
 - [] Profile Page includes:
     - [x] Username
-    - [ ] join date
+    - [x] join date
     - [ ] profile picture
     - [x] a list of their stories
     - [] A list of stories that they are following
