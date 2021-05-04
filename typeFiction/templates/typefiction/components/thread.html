@@ -14,7 +14,7 @@
         </div>
         {% endif %}
     </div>
-    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Watcher: <span id="story-{{story.id}}-watch">{{story.watchlist.count}}</span></small>
+    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Watchers: <span id="story-{{story.id}}-watch">{{story.watchlist.count}}</span></small>
 </div>
 
 <!-- implement javascript to use django templates variable -->
