@@ -34,7 +34,6 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 - [x] Browse and Read stories without needing to register
 - [x] Submit a request to add additional categories
 - [x] Post their stories (with Markdown content) to the approved categories
-- [ ] Save their stories draft
 - [ ] Edit their stories
 - [ ] Delete stories 
 - [ ] Delete Chapter
@@ -49,6 +48,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
     - [] A list of stories that they are following
 - [ ] filter to search for stories
 - [x] Comment on stories
+- [ ] Save their stories draft (Stretch Goal)
 - [ ] Welcome Email after account creation (Stretch Goal)
 - [ ] Email verification to activate account (Stretch Goal)
 - [ ] Create tags attached to their stories/post (Stretch Goal)

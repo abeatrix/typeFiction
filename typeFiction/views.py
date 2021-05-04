@@ -172,6 +172,15 @@ def story_edit(request, story_id):
         return render(request, "typefiction/new.html", context)
 
 
+# DELETE STORY
+@login_required
+def delete_story(request, story_id):
+    story = Story.objects.get(id=story_id)
+    if story.user == request.user:
+        story.delete()
+    return redirect('story', story_id=story_id)
+
+
 # EDIT CHAPTER
 @login_required
 def story_edit(request, story_id, chapter_id):
@@ -188,6 +197,14 @@ def story_edit(request, story_id, chapter_id):
         c_form = Chapter_Form(instance=chapter)
         context = {'form': c_form, 'chapter': chapter}
         return render(request, "typefiction/new.html", context)
+
+# DELETE CHAPTER
+@login_required
+def delete_chapter(request, story_id, chapter_id):
+    chapter = Chapter.objects.get(id=chapter_id)
+    if chapter.story.user == request.user:
+        chapter.delete()
+    return redirect('story', story_id=story_id)
 
 
 # ------- COMMENTS / REVIEWS -------#
