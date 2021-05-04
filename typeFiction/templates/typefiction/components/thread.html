@@ -1,8 +1,8 @@
 {% load static %}
-<div class="container my-3 border border-primary">
+<div class="container my-3 border border-primary" id="story-boarder-{{story.id}}">
     <div class="row">
         <div class="col">
-            <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> <a class="text-success" href="{% url "story" story.id %}#reviews" id="title-link"><strong>reviews</strong></a></p>
+            <p><a href="{% url "story" story.id %}" id="title-link">{{story.title}}</a> by <a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> {% if story.chapters.count%}<a class="text-success" href="{% url "story" story.id %}#reviews" id="title-link"><strong>reviews</strong></a>{% else %}<strong class="text-danger">Story with no chapter is not published</strong>{% endif %}</p>
             <p>{{story.description}}</p>
         </div>
         {% if user.is_authenticated %} 
@@ -22,6 +22,9 @@
     document.addEventListener("DOMContentLoaded", function(){
         const story_id = {{story.id}}
         {% if user.is_authenticated %}
+            {% if story.chapters.count == 0 %}
+                document.querySelector('#story-boarder-{{story.id}}').classList.add("border-danger");
+            {% endif %}
             document.querySelector('#like-btn-{{story.id}}').addEventListener('click', () => go_like(story_id));
             // Show watch button only for users that are not the author
             {% if request.user != story.author %} 

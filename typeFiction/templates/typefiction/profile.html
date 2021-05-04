@@ -17,7 +17,10 @@
     
     <h5 class="my-3"><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
     {% for story in stories%}
-        {% if story.chapters.count > 0 %}
+    <!-- display stories with at least 1 chapter if they are not the author -->
+        {% if request.user.id != profile.id and story.chapters.count > 0 %}
+            {% include 'typefiction/components/thread.html' %}
+        {% elif request.user.id == profile.id%}
             {% include 'typefiction/components/thread.html' %}
         {% endif %}
     {% endfor %}
