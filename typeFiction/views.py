@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import User, Story, Profile, Category, Chapter, Comment
-from .forms import Story_Form, Comment_Form
+from .forms import Story_Form, Comment_Form, Chapter_Form, Profile_Form
 
 # HOME PAGE
 def index(request):
@@ -171,6 +171,23 @@ def story_edit(request, story_id):
         context = {'form': story_form, 'story': story}
         return render(request, "typefiction/new.html", context)
 
+
+# EDIT CHAPTER
+@login_required
+def story_edit(request, story_id, chapter_id):
+    # Must be request via PUT
+    chapter = Chapter.objects.get(id=chapter_id)
+    # TO UPDATE THE NEWLY EDITED CHAPTER
+    if request.method == "POST" and request.user == chapter.story.author:
+        c_form = Chapter_Form(request.POST, instance=chapter)
+        if c_form.is_valid():
+            c_form.save()
+            return redirect('story', story_id)
+    # GET chapter details for editing purpose
+    elif request.method == "GET" and request.user == chapter.story.author:
+        c_form = Chapter_Form(instance=chapter)
+        context = {'form': c_form, 'chapter': chapter}
+        return render(request, "typefiction/new.html", context)
 
 
 # ------- COMMENTS / REVIEWS -------#
