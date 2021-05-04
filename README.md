@@ -1,7 +1,14 @@
 # typeFiction
 An online platform for amateur writers to publish their stories.
 
-## To start the ap
+## Project requirements
+- Your web application must utilize Django (including at least one model) on the back-end and JavaScript on the front-end.
+- Your web application must be mobile-responsive.
+- In a README file (whose extension can be .txt, .md, .adoc, or .pdf) in your project’s main directory, include a full write-up describing your project, what’s contained in each file you created, why you made certain design decisions, and any other additional information the staff should know about your project. This document should be sufficiently thorough for your teaching fellow to run your project without any need to contact you further with questions. Take your time, and do not save this step for last.
+- If you’ve added any Python packages that need to be installed in order to run your web application, be sure to add them to a requirements.txt file!
+
+
+## To start the app
 1. pip3 install django-crispy-forms
 1. pip3 install markdown2
 1. Setting.py + CRISPY_TEMPLATE_PACK = 'bootstrap4'
