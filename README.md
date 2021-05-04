@@ -10,6 +10,7 @@ An online platform for amateur writers to publish their stories.
 
 ## To start the app
 1. Setting.py + CRISPY_TEMPLATE_PACK = 'bootstrap4'
+1. pip3 install -r requirements.txt
 1. Run `python3 manage.py makemigrations typeFiction` to make migrations for the typeFiction app.
 1. Run `python3 manage.py migrate` to apply migrations to your database.
 1. Run `python3 manage.py runserver` to start server
@@ -18,6 +19,39 @@ An online platform for amateur writers to publish their stories.
 This project started out as an extension of my [Network project](https://github.com/abeatrix/network). The goal of this project is to utilize the skills I’ve acquired from the last four projects to build something new, which includes making API calls, creating API routes, pagination, etc. However, instead of using SQLite, I have decided to use PostgreSQL as the database. 
 
 I wanted to use React.js for the frontend initially but realized React.js would be better used when building a single-page application, that makes me believe staying with Django templates and focus on creating reusable components with jQuery would be a better choice here. I have also done my research on designing mobile-friendly web apps and other django libraries.
+
+## Features
+- [x] PostgreSQL
+- [] jQuery
+- [x] User Auth (Login, Logout)
+- [x] Models/Schema
+    - [x] Profile
+    - [x] Story
+    - [x] Chapter
+    - [x] Comment
+    - [x] Category
+- [x] Basic API Routes for POST, PUT, GET requests
+- [x] Browse and Read stories without needing to register
+- [x] Submit a request to add additional categories
+- [x] Post their stories (with Markdown content) to the approved categories
+- [] Save their stories draft
+- [] Edit their stories
+- [] Delete stories 
+- [] Delete Chapter
+- [x] Follow/unfollow a story
+- [x] Like a story
+- [x] Stories can have multiple chapters
+- [] Profile Page includes:
+    - [x] Username
+    - [] join date
+    - [] profile picture
+    - [x] a list of their stories
+    - [] A list of stories that they are following
+- [] filter to search for stories
+- [x] Comment on stories
+- [] Welcome Email after account creation (Stretch Goal)
+- [] Email verification to activate account (Stretch Goal)
+- [] Create tags attached to their stories/post (Stretch Goal)
 
 
 ## File Structure
@@ -30,6 +64,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 
 ## Design Decisions
 - create reusable components / libraries that can be reused throughout the app
+- JavaScript is includes within each component instead of in separated static folder because I want to take advantage of the django templates tags
 
 
 ## 🖨 Dependents
