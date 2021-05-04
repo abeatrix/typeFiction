@@ -1,0 +1,9 @@
+asgiref==3.3.1
+Django==3.1.7
+django-crispy-forms==1.11.2
+markdown2==2.4.0
+PyQt5==5.15.2
+PyQt5-sip==4.19.25
+pytz==2021.1
+sqlparse==0.4.1
+TBB==0.1

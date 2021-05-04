@@ -3,13 +3,24 @@
 {% block title %}: {{profile}}'s profile{% endblock %}
 
 {% block body %}
-    {% if request.user.id != profile.id and user.is_authenticated %} 
-    <div class="text-right"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
-    {% endif %}
-    <h3 id="profile-card-{{profile.id}}">{{profile}}'s profile</h3> 
-    <h5><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
+    <div class="row my-3">
+        <div class="col">
+            <h3 id="profile-card-{{profile.id}}">{{profile}}'s profile</h3> 
+        </div>
+
+        {% if request.user.id != profile.id and user.is_authenticated %} 
+        <div class="col-2 text-left">
+            <div class="text-left"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
+        </div>
+        {% endif %}
+    </div>
+    
+    <h5 class="my-3"><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
     {% for story in stories%}
-        {% if story.chapters.count > 0 %}
+    <!-- display stories with at least 1 chapter if they are not the author -->
+        {% if request.user.id != profile.id and story.chapters.count > 0 %}
+            {% include 'typefiction/components/thread.html' %}
+        {% elif request.user.id == profile.id%}
             {% include 'typefiction/components/thread.html' %}
         {% endif %}
     {% endfor %}

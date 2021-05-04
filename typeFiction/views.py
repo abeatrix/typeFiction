@@ -155,23 +155,25 @@ def submit_chapter(request, story_id):
 
 
 # EDIT STORY
-# @login_required
-# def story_edit(request, story_id):
-#     # Must be request via PUT
-#     story = Story.objects.get(id=story_id)
-#     if request.method == "POST" and request.user == story.author:
-#         story_form = Story_Form(request.POST, instance=story)
-#         if story_form.is_valid():
-#             story_form.save()
-#             return redirect('story', story_id)
-#     elif request.method == "GET" and request.user == story.author:
-#         story_form = Story_Form(instance=story)
-#         context = {'form'=story_form, 'story'=story}
-#         return render(request, "typefiction/new.html", context)
+@login_required
+def story_edit(request, story_id):
+    # Must be request via PUT
+    story = Story.objects.get(id=story_id)
+    # TO UPDATE THE NEWLY EDITED STORY
+    if request.method == "POST" and request.user == story.author:
+        story_form = Story_Form(request.POST, instance=story)
+        if story_form.is_valid():
+            story_form.save()
+            return redirect('story', story_id)
+    # GET story details for editing purpose
+    elif request.method == "GET" and request.user == story.author:
+        story_form = Story_Form(instance=story)
+        context = {'form': story_form, 'story': story}
+        return render(request, "typefiction/new.html", context)
 
 
 
-# ------- COMMENTS -------#
+# ------- COMMENTS / REVIEWS -------#
 
 # Create Comments
 @login_required

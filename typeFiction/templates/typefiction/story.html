@@ -9,20 +9,20 @@
         <p>{{c.content| safe }}</p>
     </div>
     {% endfor %}
-    {% if user.is_authenticated %}
-    {% include 'typefiction/components/newChapter.html' %}
+    {% if request.user == story.author %}
+        {% include 'typefiction/components/newChapter.html' %}
     {% endif %}
     <div class="container my-3">
         <a name="reviews"><h3 class="border-bottom mb-3">Reviews</h3></a>
     {% if comments.count %}
-    {% for com in comments %}
-    <div  class="border-bottom">
-        <p>{{com.comment}}</p>
-        <small>Reviewed by {{com.user}} {{com.post_date|timesince}} ago</small>
-    </div>
-    {% endfor %}
+        {% for com in comments %}
+        <div  class="border-bottom">
+            <p>{{com.comment}}</p>
+            <small>Reviewed by {{com.user}} {{com.post_date|timesince}} ago</small>
+        </div>
+        {% endfor %}
     {% else %}
-    <p>There is no review yet...</p>
+        <p>There is no review yet...</p>
     {% endif %}
     </div>
     {% include 'typefiction/components/newComment.html' %}
