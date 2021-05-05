@@ -30,13 +30,18 @@ I wanted to use React.js for the frontend initially but realized React.js would 
     - [x] Chapter
     - [x] Comment
     - [x] Category
-- [x] Basic API Routes for POST, PUT, GET requests
 - [x] Browse and Read stories without needing to register
 - [x] Submit a request to add additional categories
 - [x] Post their stories (with Markdown content) to the approved categories
 - [ ] Edit their stories
+    - [x] API Route
+    - [ ] UI
 - [ ] Delete stories 
+    - [x] API Route
+    - [ ] UI
 - [ ] Delete Chapter
+    - [x] API Route
+    - [ ] UI
 - [x] Follow/unfollow a story
 - [x] Like a story
 - [x] Stories can have multiple chapters
@@ -45,7 +50,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
     - [x] join date
     - [ ] profile picture
     - [x] a list of their stories
-    - [] A list of stories that they are following
+    - [ ] A list of stories that they are following
 - [ ] filter to search for stories
 - [x] Comment on stories
 - [ ] Save their stories draft (Stretch Goal)

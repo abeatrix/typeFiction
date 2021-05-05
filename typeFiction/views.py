@@ -281,6 +281,8 @@ def follows(request, user_id):
     return redirect("/")
 
 
+
+# ------- ACTIONS -------#
 # LIKES
 @csrf_exempt
 @login_required

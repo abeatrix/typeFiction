@@ -4,16 +4,25 @@
 
 {% block body %}
     <div class="row my-3">
+        <div class="col-1">
+            {% if profile.image %}
+            <img id="profile-picture-{{profile.id}} profile-picture" width="100%" src="{{profile.image}}"></img>
+            {% else %}
+            <img id="profile-picture-{{profile.id}} profile-picture" width="100%" src="https://www.oseyo.co.uk/wp-content/uploads/2020/05/empty-profile-picture-png-2.png"></img>
+            {% endif %}
+        </div>
         <div class="col">
             <h3 id="profile-card-{{profile.id}}">{{profile}}'s profile</h3> 
-            <small>Member since {{profile.user.date_joined| date:"F d Y"}}</small>
+            <small>Member since {{profile.user.date_joined| date:"F d Y"}}</small> 
         </div>
 
-        {% if request.user.id != profile.id and user.is_authenticated %} 
         <div class="col-2 text-left">
-            <div class="text-left"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
+            {% if request.user.id != profile.id and user.is_authenticated %} 
+            <div class="text-left in-line"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
+            {% elif request.user.id == profile.id %}
+            <div class="text-left in-line my-2"><button id="edit-btn-{{profile.id}}" class="btn btn-primary mx-3">Edit</button></div> 
+            {% endif %}
         </div>
-        {% endif %}
     </div>
     
     <h5 class="my-3">{{stories|length}} Stories | <strong id="following-num-{{profile.id}}">{{following|length}}</strong> following | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
