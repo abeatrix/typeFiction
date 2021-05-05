@@ -19,6 +19,7 @@ urlpatterns = [
     path("story/delete/<int:story_id>", views.delete_story, name="delete_story"),
     path("submit_chapter/<int:story_id>", views.submit_chapter, name="submit_chapter"),
     path("chapter/edit/<int:chapter_id>", views.chapter_edit, name="chapter_edit"),
+    path("chapter/delete/<int:chapter_id>", views.delete_chapter, name="delete_chapter"),
     path("submit_comment/<int:story_id>", views.submit_comment, name="submit_comment"),
     # LIKES
     path("likes/<int:story_id>", views.likes, name="likes"),

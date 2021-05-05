@@ -2,7 +2,8 @@
 <div class="container my-5" id="chapter-card-{{c.id}}">
     <div class="d-flex align-items-center">
         {% if request.user == story.author %} 
-        <button class="d-inline btn btn-danger mr-1" id="chapter-edit-{{c.id}}">Edit</button>
+        <button class="d-inline btn btn-success mr-1" id="chapter-edit-{{c.id}}">Edit</button>
+        <button class="d-inline btn btn-danger mr-1" id="chapter-delete-{{c.id}}">Delete</button>
         {% endif %}
         <h1 class="d-inline" id="chapter-title-{{c.id}}">Chapter {{forloop.counter}}: {{c.chapter}}</h1>
     </div>
@@ -16,9 +17,21 @@
         {% if user.is_authenticated %}
             {% if request.user == story.author %} 
             document.querySelector('#chapter-edit-{{c.id}}').addEventListener('click', () => edit_chapter(chapter_id));
+            document.querySelector('#chapter-delete-{{c.id}}').addEventListener('click', () => delete_chapter(chapter_id));
             {% endif %}
         {% endif %}
     });
+
+    // DELETE CHAPTER
+    function delete_chapter(chapter_id){
+        fetch(`/chapter/delete/${chapter_id}`, {
+            method: 'POST'
+        })
+        .then(()=>{
+            document.querySelector(`#chapter-card-${chapter_id}`).remove()
+        })
+        .catch(err=>console.log(err));
+    }
 
     function edit_chapter(chapter_id){
         // create input box for chapter title
