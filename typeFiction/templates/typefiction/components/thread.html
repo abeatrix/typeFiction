@@ -20,7 +20,7 @@
 <!-- implement javascript to use django templates variable -->
 <script>
     document.addEventListener("DOMContentLoaded", function(){
-        const story_id = {{story.id}}
+        const story_id = "{{story.id}}"
         {% if user.is_authenticated %}
             {% if story.chapters.count == 0 %}
                 document.querySelector('#story-card-{{story.id}}').classList.add("border-danger");
@@ -103,7 +103,7 @@
     story_title_input.type = "text"
     story_title_input.id = `new_story_title-${story_id}`;
     story_title_input.required = true;
-    story_title_input.value = "{{story.title}}"
+    story_title_input.value = story_title_el.innerHTML;
     story_title_el.parentNode.replaceChild(story_title_input, story_title_el)
     // create textarea box for story description
     const story_desc_el = document.querySelector(`#story-desc-${story_id}`);
@@ -111,7 +111,7 @@
     story_desc_input.id = `new_story_desc-${story_id}`
     story_desc_input.row = "5"
     story_desc_input.required = true;
-    story_desc_input.value = "{{story.description}}"
+    story_desc_input.value = story_desc_el.innerHTML;
     story_desc_el.parentNode.replaceChild(story_desc_input, story_desc_el)
     // create submit button
     const story_submit_btn = document.createElement('button');
@@ -123,9 +123,9 @@
 
     // when the submit button is clicked
     story_submit_btn.addEventListener('click', () => {
-        const newStoryTitle = story_title_input.value;
-        const newStoryDesc = story_desc_input.value;
-        fetch(`/story/edit/{{story.id}}`, {
+        const newStoryTitle = document.querySelector(`#new_story_title-${story_id}`).value;
+        const newStoryDesc = document.querySelector(`#new_story_desc-${story_id}`).value;
+        fetch(`/story/edit/${story_id}`, {
             method: 'POST', 
             body: JSON.stringify({
                 title: newStoryTitle,

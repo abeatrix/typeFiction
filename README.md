@@ -39,9 +39,9 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 - [ ] Delete stories 
     - [x] API Route
     - [ ] UI
-- [ ] Edit their chapter
+- [x] Edit their chapter
     - [x] API Route
-    - [ ] UI
+    - [x] UI
 - [ ] Delete Chapter
     - [x] API Route
     - [ ] UI
