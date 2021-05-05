@@ -4,18 +4,32 @@
 
 {% block body %}
     <div class="row my-3">
-        <div class="col">
-            <h3 id="profile-card-{{profile.id}}">{{profile}}'s profile</h3> 
+        <div class="col-1" id='profile-img'>
+            {% if profile.image %}
+            <img id="profile-picture-{{profile.id}}" width="100%" src="{{profile.image}}"></img>
+            {% else %}
+            <img id="profile-picture-{{profile.id}}" width="100%" src="https://i.ibb.co/d400nvn/pp.png"></img>
+            {% endif %}
+        </div>
+        <div class="col" id='profile-details'>
+            <h3 id="profile-card-{{profile.id}}"><span id="profile-name">{{profile}}</span>'s profile</h3> 
+            <small id="profile-date">Member since {{profile.user.date_joined| date:"F d Y"}}</small> 
         </div>
 
-        {% if request.user.id != profile.id and user.is_authenticated %} 
-        <div class="col-2 text-left">
-            <div class="text-left"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
+        <div class="col-2 text-left" id='profile-btns'>
+            {% if request.user.id != profile.id and user.is_authenticated %} 
+            <div class="text-left in-line"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
+            {% elif request.user.id == profile.id %}
+            <div class="text-left in-line my-2"><button id="edit-btn-{{profile.id}}" class="btn btn-primary mx-3">Edit Info</button></div> 
+            {% endif %}
         </div>
-        {% endif %}
     </div>
     
-    <h5 class="my-3"><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
+    <h5 class="my-3"><a href="#profile-stories">{{stories|length}} Stories</a> | <a href="#following-stories"><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following</a> | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
+
+    <a name="profile-stories"></a>
+    <h5 class="my-5">Stories from {{profile.user}}</h5>
+    <div id="user-stories-all" class="my-5">
     {% for story in stories%}
     <!-- display stories with at least 1 chapter if they are not the author -->
         {% if request.user.id != profile.id and story.chapters.count > 0 %}
@@ -24,11 +38,22 @@
             {% include 'typefiction/components/thread.html' %}
         {% endif %}
     {% endfor %}
-    <!-- {% if user.is_authenticated %}
-        {% include 'typefiction/components/newCat.html' %}
-        {% include 'typefiction/components/newStory.html' %}
-    {% endif %} -->
+    </div>
+    
+    <a name="following-stories"></a>
+    <h5 class="my-5">Stories from Following Authors</h5>
+    <div id="following-stories-all" class="my-5">
+    {% for story in following_stories%}
+    <!-- display stories with at least 1 chapter if they are not the author -->
+        {% if story.chapters.count > 0 %}
+            {% include 'typefiction/components/thread.html' %}
+        {% endif %}
+    {% endfor %}
+    </div>
+    
 {% endblock %}
+
+
 
 {% block script %}
 <script>
@@ -36,19 +61,66 @@
         const profile_id = {{profile.id}}
 
         {% if request.user.id != profile.id and user.is_authenticated %} 
-            follow_status(profile_id)
-            document.querySelector('#follow-btn-{{profile.id}}').addEventListener('click', () => go_follow(profile_id));
+        follow_status(profile_id)
+        document.querySelector('#follow-btn-{{profile.id}}').addEventListener('click', () => go_follow(profile_id));
+        {% endif %}
+
+        // LISTEN TO CLICK ON EDIT BUTTON IF REQUEST USER IS THE PROFILE OWNER
+        {% if request.user.id == profile.id %}
+        document.querySelector('#edit-btn-{{profile.id}}').addEventListener('click', () => go_edit(profile_id));
         {% endif %}
     });
 
-    function go_follow(user_id){
+    // EDIT PROFILE BUTTON
+    function go_edit(){
+        // select edit button by element id
+        const edit = document.querySelector(`#edit-btn-{{profile.id}}`);
+        // create input box for profile image
+        const profile_div = document.querySelector(`#profile-details`);
+        const img_input = document.createElement('input');
+        img_input.type = "url"
+        img_input.id = "img_url"
+        img_input.required = true;
+        img_input.placeholder = "Enter an image url here"
+        profile_div.append(img_input)
+        // create submit button
+        const submit_btn = document.createElement('button');
+        submit_btn.id = `submit-btn`;
+        submit_btn.className = 'btn btn-success m-1';
+        submit_btn.innerHTML = 'Submit';
+        // switch edit button to submit button
+        edit.parentNode.replaceChild(submit_btn, edit)
+
+        // when the submit button is clicked
+        submit_btn.addEventListener('click', () => {
+            const new_img = document.querySelector(`#img_url`).value;
+            fetch(`/profile/edit/{{request.user.id}}`, {
+                method: 'POST', 
+                body: JSON.stringify({
+                    image: new_img
+                })
+            })
+            .then(data=>{
+                document.querySelector('#profile-picture-{{profile.id}}').src = new_img;
+                img_input.remove()
+                submit_btn.parentNode.replaceChild(edit, submit_btn)
+            })
+            .then(res=>console.log(res))
+            .catch(err=>console.log(err));
+        })
+
+    }
+
+
+    // FOLLOW BUTTON
+    function go_follow(profile_id){
         // select follow button by element id
-        const f = document.querySelector(`#follow-btn-${user_id}`);
+        const f = document.querySelector(`#follow-btn-${profile_id}`);
         // select follow number by element id
-        const numElm = document.querySelector(`#follower-num-${user_id}`);
+        const numElm = document.querySelector(`#follower-num-${profile_id}`);
         const num = parseInt(numElm.innerHTML)
         // perform PUT
-        fetch('/follows/'+user_id, {
+        fetch('/follows/'+profile_id, {
             method: 'PUT',
         })
         .then(res=>res.json())
@@ -61,11 +133,12 @@
         .catch(err=>console.log(err));
     }
 
-    function follow_status(user_id) {
+    // CHECK IF THE REQUEST USER IS ALREADY FOLLOWING THE PROFILE OWNER
+    function follow_status(profile_id) {
         // select follow button by element id
-        const f = document.querySelector(`#follow-btn-${user_id}`);
+        const f = document.querySelector(`#follow-btn-${profile_id}`);
         // perform GET
-        fetch('/follows/'+user_id, {
+        fetch('/follows/'+profile_id, {
             method: 'GET',
         })
         .then(res=>res.json())

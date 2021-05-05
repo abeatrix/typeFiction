@@ -4,10 +4,7 @@
 {% block body %}
     {% include 'typefiction/components/thread.html' %}
     {% for c in chapters %}
-    <div class="container my-5">
-        <h1>Chapter {{forloop.counter}}: {{c.chapter}}</h1>
-        <p>{{c.content| safe }}</p>
-    </div>
+    {% include 'typefiction/components/chapter.html' %}
     {% endfor %}
     {% if request.user == story.author %}
         {% include 'typefiction/components/newChapter.html' %}
@@ -25,5 +22,7 @@
         <p>There is no review yet...</p>
     {% endif %}
     </div>
+    {% if user.is_authenticated %}
     {% include 'typefiction/components/newComment.html' %}
+    {% endif %}
 {% endblock %}

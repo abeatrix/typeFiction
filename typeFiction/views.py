@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import User, Story, Profile, Category, Chapter, Comment
-from .forms import Story_Form, Comment_Form
+from .forms import Story_Form, Comment_Form, Chapter_Form, Profile_Form
 
 # HOME PAGE
 def index(request):
@@ -138,6 +138,34 @@ def submit_story(request):
     return redirect("/")
 
 
+# EDIT STORY
+@login_required
+@csrf_exempt
+def story_edit(request, story_id):
+    # Must be request via POST
+    story = Story.objects.get(id=story_id)
+    # TO UPDATE THE NEWLY EDITED STORY
+    if request.method == "POST" and request.user == story.author:
+        story_form = json.loads(request.body)
+        story.title = story_form["title"]
+        story.description = story_form["description"]
+        story.save()
+        return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to update"})
+
+
+# DELETE STORY
+@login_required
+@csrf_exempt
+def delete_story(request, story_id):
+    if request.method == "POST":
+        story = Story.objects.get(id=story_id)
+        if story.author == request.user:
+            story.delete()
+            return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to delete"})
+
+
 # Create new Chapter
 @login_required
 def submit_chapter(request, story_id):
@@ -154,23 +182,31 @@ def submit_chapter(request, story_id):
     return redirect("story", story_id)
 
 
-# EDIT STORY
+# EDIT CHAPTER
 @login_required
-def story_edit(request, story_id):
-    # Must be request via PUT
-    story = Story.objects.get(id=story_id)
+@csrf_exempt
+def chapter_edit(request, chapter_id):
+    # Must be request via POST
+    chapter = Chapter.objects.get(id=chapter_id)
     # TO UPDATE THE NEWLY EDITED STORY
-    if request.method == "POST" and request.user == story.author:
-        story_form = Story_Form(request.POST, instance=story)
-        if story_form.is_valid():
-            story_form.save()
-            return redirect('story', story_id)
-    # GET story details for editing purpose
-    elif request.method == "GET" and request.user == story.author:
-        story_form = Story_Form(instance=story)
-        context = {'form': story_form, 'story': story}
-        return render(request, "typefiction/new.html", context)
+    if request.method == "POST" and request.user == chapter.story.author:
+        chapter_form = json.loads(request.body)
+        chapter.chapter = chapter_form["chapter"]
+        chapter.content = chapter_form["content"]
+        chapter.save()
+        return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to update"})
 
+# DELETE CHAPTER
+@login_required
+@csrf_exempt
+def delete_chapter(request, chapter_id):
+    if request.method == "POST":
+        chapter = Chapter.objects.get(id=chapter_id)
+        if chapter.story.author == request.user:
+            chapter.delete()
+        return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to delete"})
 
 
 # ------- COMMENTS / REVIEWS -------#
@@ -208,11 +244,27 @@ def profile(request, user_id):
         profile = User.objects.get(id=user_id).profile
         stories = Story.objects.filter(author_id=user_id).order_by("post_date")
         following = list(profile.following.all())
+        following_stories = Story.objects.filter(author__in=following)
         follower = Profile.objects.filter(following=profile.user)
     except User.DoesNotExist:
         return redirect("/")
-    context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower}
+    context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower, 'following_stories': following_stories}
     return render(request, 'typefiction/profile.html', context)
+
+
+# EDIT PROFILE
+@csrf_exempt
+@login_required
+def profile_edit(request, user_id):
+    # Must be request via PUT
+    profile = Profile.objects.get(id=user_id)
+    # TO UPDATE THE NEWLY EDITED STORY
+    if request.method == "POST" and request.user.id == profile.user.id:
+        new_img = json.loads(request.body)
+        profile.image = new_img["image"]
+        profile.save()
+        return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to update"})
 
 
 # FOLLOWS
@@ -247,6 +299,8 @@ def follows(request, user_id):
     return redirect("/")
 
 
+
+# ------- ACTIONS -------#
 # LIKES
 @csrf_exempt
 @login_required
