@@ -32,4 +32,4 @@ class Profile_Form(ModelForm):
     
     class Meta:
         model = Profile
-        fields = ['displayname', 'image']
+        fields = ['image']

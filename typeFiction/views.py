@@ -249,6 +249,21 @@ def profile(request, user_id):
     return render(request, 'typefiction/profile.html', context)
 
 
+# EDIT PROFILE
+@csrf_exempt
+@login_required
+def profile_edit(request, user_id):
+    # Must be request via PUT
+    profile = Profile.objects.get(id=user_id)
+    # TO UPDATE THE NEWLY EDITED STORY
+    if request.method == "POST" and request.user.id == profile.user.id:
+        new_img = json.loads(request.body)
+        profile.image = new_img["image"]
+        profile.save()
+        return JsonResponse({"msg": "yes"})
+    return JsonResponse({"msg": "no"})
+
+
 # FOLLOWS
 @csrf_exempt
 @login_required
