@@ -8,7 +8,7 @@ from django.dispatch import receiver
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     displayname = models.CharField(max_length=30)
-    image = models.URLField()
+    image = models.URLField(default="https://i.ibb.co/d400nvn/pp.png")
     following = models.ManyToManyField(User, symmetrical=False, blank=True, related_name="follower")
 
     def __str__(self):
