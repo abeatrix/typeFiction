@@ -25,5 +25,7 @@
         <p>There is no review yet...</p>
     {% endif %}
     </div>
+    {% if user.is_authenticated %}
     {% include 'typefiction/components/newComment.html' %}
+    {% endif %}
 {% endblock %}

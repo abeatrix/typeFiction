@@ -39,18 +39,24 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 - [ ] Delete stories 
     - [x] API Route
     - [ ] UI
+- [ ] Edit their chapter
+    - [x] API Route
+    - [ ] UI
 - [ ] Delete Chapter
     - [x] API Route
     - [ ] UI
+- [x] Edit their profile
+    - [x] API Route
+    - [x] UI
 - [x] Follow/unfollow a story
 - [x] Like a story
 - [x] Stories can have multiple chapters
-- [] Profile Page includes:
+- [x] Profile Page includes:
     - [x] Username
     - [x] join date
-    - [ ] profile picture
+    - [x] profile picture
     - [x] a list of their stories
-    - [ ] A list of stories that they are following
+    - [x] A list of stories that they are following
 - [ ] filter to search for stories
 - [x] Comment on stories
 - [ ] Save their stories draft (Stretch Goal)

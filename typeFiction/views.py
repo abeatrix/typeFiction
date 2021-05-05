@@ -155,21 +155,19 @@ def submit_chapter(request, story_id):
 
 
 # EDIT STORY
+@csrf_exempt
 @login_required
 def story_edit(request, story_id):
-    # Must be request via PUT
+    # Must be request via POST
     story = Story.objects.get(id=story_id)
     # TO UPDATE THE NEWLY EDITED STORY
     if request.method == "POST" and request.user == story.author:
-        story_form = Story_Form(request.POST, instance=story)
-        if story_form.is_valid():
-            story_form.save()
-            return redirect('story', story_id)
-    # GET story details for editing purpose
-    elif request.method == "GET" and request.user == story.author:
-        story_form = Story_Form(instance=story)
-        context = {'form': story_form, 'story': story}
-        return render(request, "typefiction/new.html", context)
+        story_form = json.loads(request.body)
+        story.title = story_form.title
+        story.description = story_form.description
+        story.save()
+        return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to update"})
 
 
 # DELETE STORY
@@ -197,6 +195,7 @@ def story_edit(request, story_id, chapter_id):
         c_form = Chapter_Form(instance=chapter)
         context = {'form': c_form, 'chapter': chapter}
         return render(request, "typefiction/new.html", context)
+
 
 # DELETE CHAPTER
 @login_required
@@ -261,8 +260,8 @@ def profile_edit(request, user_id):
         new_img = json.loads(request.body)
         profile.image = new_img["image"]
         profile.save()
-        return JsonResponse({"msg": "yes"})
-    return JsonResponse({"msg": "no"})
+        return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to update"})
 
 
 # FOLLOWS
