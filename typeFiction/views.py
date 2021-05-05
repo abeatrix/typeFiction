@@ -156,11 +156,14 @@ def story_edit(request, story_id):
 
 # DELETE STORY
 @login_required
+@csrf_exempt
 def delete_story(request, story_id):
-    story = Story.objects.get(id=story_id)
-    if story.user == request.user:
-        story.delete()
-    return redirect('story', story_id=story_id)
+    if request.method != "POST":
+        story = Story.objects.get(id=story_id)
+        if story.user == request.user:
+            story.delete()
+            return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to update"})
 
 
 # Create new Chapter
@@ -196,11 +199,13 @@ def chapter_edit(request, chapter_id):
 
 # DELETE CHAPTER
 @login_required
+@csrf_exempt
 def delete_chapter(request, story_id, chapter_id):
-    chapter = Chapter.objects.get(id=chapter_id)
-    if chapter.story.user == request.user:
-        chapter.delete()
-    return redirect('story', story_id=story_id)
+    if request.method != "POST":
+        chapter = Chapter.objects.get(id=chapter_id)
+        if chapter.story.user == request.user:
+            chapter.delete()
+        return redirect('story', story_id=story_id)
 
 
 # ------- COMMENTS / REVIEWS -------#

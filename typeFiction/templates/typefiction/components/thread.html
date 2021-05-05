@@ -14,7 +14,7 @@
         </div>
         {% endif %}
     </div>
-    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Watchers: <span id="story-{{story.id}}-watch">{{story.watchlist.count}}</span>{% if request.user == story.author %}  - <strong id="edit-story-{{story.id}}" class="text-danger">Edit</strong>{% endif %}</small>
+    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Watchers: <span id="story-{{story.id}}-watch">{{story.watchlist.count}}</span>{% if request.user == story.author %} - <strong id="edit-story-{{story.id}}" class="text-success">Edit</strong> - <strong id="delete-story-{{story.id}}" class="text-danger">Delete</strong>{% endif %}</small>
 </div>
 
 <!-- implement javascript to use django templates variable -->
@@ -30,9 +30,10 @@
             {% if request.user != story.author %} 
             document.querySelector('#watch-btn-{{story.id}}').addEventListener('click', () => add_watchlist(story_id));
             {% endif %}
-            // Allow author to edit their own story
+            // Allow author to edit / delete their own story
             {% if request.user == story.author %} 
             document.querySelector('#edit-story-{{story.id}}').addEventListener('click', () => edit_story(story_id));
+            document.querySelector('#delete-story-{{story.id}}').addEventListener('click', () => delete_story(story_id));
             {% endif %}
             // Turn Like button color to red if the user has liked the story
             {% if request.user in story.likes.all %}
@@ -93,6 +94,17 @@
         w_icon.classList.contains("text-danger") ? w_icon.classList.remove("text-danger") : w_icon.classList.add("text-danger");
     }
 
+    // DELETE STORY
+    function delete_story(story_id){
+        fetch(`/story/delete/${story_id}`, {
+            method: 'POST'
+        })
+        .then(()=>{
+            document.querySelector(`#story-card-${story_id}`).remove()
+        })
+        .catch(err=>console.log(err));
+    }
+
     // EDIT STORY
     function edit_story(story_id){
     // select edit button by element id
@@ -142,6 +154,7 @@
         })
         .catch(err=>console.log(err));
     })
+
 }
 
     
