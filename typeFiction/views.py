@@ -155,16 +155,16 @@ def submit_chapter(request, story_id):
 
 
 # EDIT STORY
-@csrf_exempt
 @login_required
+@csrf_exempt
 def story_edit(request, story_id):
     # Must be request via POST
     story = Story.objects.get(id=story_id)
     # TO UPDATE THE NEWLY EDITED STORY
     if request.method == "POST" and request.user == story.author:
         story_form = json.loads(request.body)
-        story.title = story_form.title
-        story.description = story_form.description
+        story.title = story_form["title"]
+        story.description = story_form["description"]
         story.save()
         return JsonResponse({"msg": "done"})
     return JsonResponse({"msg": "unable to update"})
@@ -181,7 +181,8 @@ def delete_story(request, story_id):
 
 # EDIT CHAPTER
 @login_required
-def story_edit(request, story_id, chapter_id):
+@csrf_exempt
+def chapter_edit(request, story_id, chapter_id):
     # Must be request via PUT
     chapter = Chapter.objects.get(id=chapter_id)
     # TO UPDATE THE NEWLY EDITED CHAPTER

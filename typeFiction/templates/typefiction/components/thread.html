@@ -133,13 +133,12 @@
             })
         })
         .then(data=>{
-            if(data.msg==="yes"){
             story_title_el.innerHTML = newStoryTitle;
             story_desc_el.innerHTML = newStoryDesc;
             // switch out input boxes
             story_title_input.parentNode.replaceChild(story_title_el, story_title_input)
             story_desc_input.parentNode.replaceChild(story_desc_el, story_desc_input)
-            story_submit_btn.remove()}
+            story_submit_btn.remove()
         })
         .catch(err=>console.log(err));
     })
