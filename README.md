@@ -33,9 +33,9 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 - [x] Browse and Read stories without needing to register
 - [x] Submit a request to add additional categories
 - [x] Post their stories (with Markdown content) to the approved categories
-- [ ] Edit their stories
+- [x] Edit their stories
     - [x] API Route
-    - [ ] UI
+    - [x] UI
 - [ ] Delete stories 
     - [x] API Route
     - [ ] UI

@@ -96,26 +96,26 @@
     // EDIT STORY
     function edit_story(story_id){
     // select edit button by element id
-    const story_div = document.querySelector(`#story-card-{{story.id}}`);
+    const story_div = document.querySelector(`#story-card-${story_id}`);
     // create input box for story title
-    const story_title_el = document.querySelector(`#story-title-link-{{story.id}}`);
+    const story_title_el = document.querySelector(`#story-title-link-${story_id}`);
     const story_title_input = document.createElement('input');
     story_title_input.type = "text"
-    story_title_input.id = "new_story_title"
+    story_title_input.id = `new_story_title-${story_id}`;
     story_title_input.required = true;
     story_title_input.value = "{{story.title}}"
     story_title_el.parentNode.replaceChild(story_title_input, story_title_el)
     // create textarea box for story description
-    const story_desc_el = document.querySelector(`#story-desc-{{story.id}}`);
+    const story_desc_el = document.querySelector(`#story-desc-${story_id}`);
     const story_desc_input = document.createElement('textarea');
-    story_desc_input.id = "new_story_desc"
+    story_desc_input.id = `new_story_desc-${story_id}`
     story_desc_input.row = "5"
     story_desc_input.required = true;
     story_desc_input.value = "{{story.description}}"
     story_desc_el.parentNode.replaceChild(story_desc_input, story_desc_el)
     // create submit button
     const story_submit_btn = document.createElement('button');
-    story_submit_btn.id = `submit-btn`;
+    story_submit_btn.id = `submit-btn-${story_id}`;
     story_submit_btn.className = 'btn btn-success m-1';
     story_submit_btn.innerHTML = 'Submit';
     // add submit button to UI

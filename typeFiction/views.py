@@ -138,22 +138,6 @@ def submit_story(request):
     return redirect("/")
 
 
-# Create new Chapter
-@login_required
-def submit_chapter(request, story_id):
-    # Must be request via POST
-    if request.method != "POST":
-        return JsonResponse({"error": "POST request only."}, status=400)
-    # Create new chapter
-    n = request.POST["chapter"]
-    c = request.POST["content"]
-    s = Story.objects.get(id=story_id)
-    new_chapter = Chapter(content = c, chapter = n, story = s)
-    new_chapter.save()
-    s.chapters.add(new_chapter)
-    return redirect("story", story_id)
-
-
 # EDIT STORY
 @login_required
 @csrf_exempt
@@ -179,24 +163,36 @@ def delete_story(request, story_id):
     return redirect('story', story_id=story_id)
 
 
+# Create new Chapter
+@login_required
+def submit_chapter(request, story_id):
+    # Must be request via POST
+    if request.method != "POST":
+        return JsonResponse({"error": "POST request only."}, status=400)
+    # Create new chapter
+    n = request.POST["chapter"]
+    c = request.POST["content"]
+    s = Story.objects.get(id=story_id)
+    new_chapter = Chapter(content = c, chapter = n, story = s)
+    new_chapter.save()
+    s.chapters.add(new_chapter)
+    return redirect("story", story_id)
+
+
 # EDIT CHAPTER
 @login_required
 @csrf_exempt
-def chapter_edit(request, story_id, chapter_id):
-    # Must be request via PUT
+def chapter_edit(request, chapter_id):
+    # Must be request via POST
     chapter = Chapter.objects.get(id=chapter_id)
-    # TO UPDATE THE NEWLY EDITED CHAPTER
+    # TO UPDATE THE NEWLY EDITED STORY
     if request.method == "POST" and request.user == chapter.story.author:
-        c_form = Chapter_Form(request.POST, instance=chapter)
-        if c_form.is_valid():
-            c_form.save()
-            return redirect('story', story_id)
-    # GET chapter details for editing purpose
-    elif request.method == "GET" and request.user == chapter.story.author:
-        c_form = Chapter_Form(instance=chapter)
-        context = {'form': c_form, 'chapter': chapter}
-        return render(request, "typefiction/new.html", context)
-
+        chapter_form = json.loads(request.body)
+        chapter.chapter = chapter_form["chapter"]
+        chapter.content = chapter_form["content"]
+        chapter.save()
+        return JsonResponse({"msg": "done"})
+    return JsonResponse({"msg": "unable to update"})
 
 # DELETE CHAPTER
 @login_required

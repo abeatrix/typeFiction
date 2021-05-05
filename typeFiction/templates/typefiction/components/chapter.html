@@ -1,0 +1,70 @@
+{% load static %}
+<div class="container my-5" id="chapter-card-{{c.id}}">
+    <div class="d-flex align-items-center">
+        {% if request.user == story.author %} 
+        <button class="d-inline btn btn-danger mr-1" id="chapter-edit-{{c.id}}">Edit</button>
+        {% endif %}
+        <h1 class="d-inline" id="chapter-title-{{c.id}}">Chapter {{forloop.counter}}: {{c.chapter}}</h1>
+    </div>
+    <p id="chapter-content-{{c.id}}">{{c.content| safe }}</p>
+</div>
+
+<!-- implement javascript to use django templates variable -->
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        const chapter_id = "{{c.id}}"
+        {% if user.is_authenticated %}
+            {% if request.user == story.author %} 
+            document.querySelector('#chapter-edit-{{c.id}}').addEventListener('click', () => edit_chapter(chapter_id));
+            {% endif %}
+        {% endif %}
+    });
+
+    function edit_chapter(chapter_id){
+        // create input box for chapter title
+        const cTitle = document.querySelector(`#chapter-title-${chapter_id}`);
+        const cTitleInput = document.createElement('input');
+        cTitleInput.id = `cTitle-input-${chapter_id}`;
+        cTitleInput.required = true;
+        cTitleInput.value = cTitle.innerHTML;
+        // create textarea box for chapter content 
+        const cContent = document.querySelector(`#chapter-content-${chapter_id}`);
+        const cContentInput = document.createElement('textarea');
+        cContentInput.id = `cDesc-input-${chapter_id}`;
+        cContentInput.required = true;
+        cContentInput.value = cContent.innerHTML;
+        // swap title and content with input areas
+        cTitle.parentNode.replaceChild(cTitleInput, cTitle)
+        cContent.parentNode.replaceChild(cContentInput, cContent)
+        // add submit button
+        const cSubmitBtn = document.createElement('button');
+        cSubmitBtn.id = `submit-btn-${chapter_id}`;
+        cSubmitBtn.className = 'btn btn-success m-1';
+        cSubmitBtn.innerHTML = 'Submit';
+        // add submit button to div
+        const cDiv = document.querySelector(`#chapter-card-${chapter_id}`);
+        cDiv.append(cSubmitBtn)
+
+        // when the submit button is clicked
+        cSubmitBtn.addEventListener('click', () => {
+            const newT = document.querySelector(`#cTitle-input-${chapter_id}`).value;
+            const newC = document.querySelector(`#cDesc-input-${chapter_id}`).value;
+            fetch(`/chapter/edit/${chapter_id}`, {
+                method: 'POST', 
+                body: JSON.stringify({
+                    chapter: newT,
+                    content: newC
+                })
+            })
+            .then(data=>{
+                cTitle.innerHTML = newT;
+                cContent.innerHTML = newC;
+                // switch out input boxes
+                cTitleInput.parentNode.replaceChild(cTitle, cTitleInput)
+                cContentInput.parentNode.replaceChild(cContent, cContentInput)
+                cSubmitBtn.remove()
+            })
+            .catch(err=>console.log(err));
+        })
+    }
+</script>
