@@ -242,10 +242,11 @@ def profile(request, user_id):
         profile = User.objects.get(id=user_id).profile
         stories = Story.objects.filter(author_id=user_id).order_by("post_date")
         following = list(profile.following.all())
+        following_stories = Story.objects.filter(author__in=following)
         follower = Profile.objects.filter(following=profile.user)
     except User.DoesNotExist:
         return redirect("/")
-    context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower}
+    context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower, 'following_stories': following_stories}
     return render(request, 'typefiction/profile.html', context)
 
 
