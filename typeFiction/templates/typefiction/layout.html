@@ -29,8 +29,8 @@
                     {% endif %}
                 </ul>
                 {% if user.is_authenticated %}
-                <a class="nav-link" href="{% url 'profile' user.id %}"><strong>{{ user.username }}</strong></a>
-                <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                <a class="nav-link" class="text-light" href="{% url 'profile' user.id %}"><strong>{{ user.username }}</strong></a>
+                <a class="nav-link" class="text-light" href="{% url 'logout' %}">Log Out</a>
                 {% else %}
                 <form class="form-inline my-2 my-lg-0" action="{% url 'login' %}" method="post">
                     {% csrf_token %}
@@ -41,9 +41,9 @@
                         <input type="text" name="username" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
                     <input class="form-control mr-sm-2"  type="password" name="password" placeholder="Password" aria-label="Password" >
-                    <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Login</button>
+                    <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Login</button>
                 </form>
-                <a class="nav-link" href="{% url 'register' %}">Register</a>
+                <a class="nav-link" class="text-light" href="{% url 'register' %}">Register</a>
                 {% endif %}
             </div>
         </nav>

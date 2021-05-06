@@ -81,11 +81,12 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 
 
 ## 🖨 Dependents
-markdown 2
-Crispy Form
-Popper
-BootStrap
-Python
-Django
-JavaScript
-HTML5&CSS
+- markdown 2
+- Crispy Form
+- opper
+- BootStrap
+- Python
+- Django
+- JavaScript
+- HTML5&CSS
+- [harry potter lorem ipsum](http://www.christinachern.com/hpipsum/)
