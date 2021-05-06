@@ -32,7 +32,8 @@ I wanted to use React.js for the frontend initially but realized React.js would 
     - [x] Category
 - [x] Browse and Read stories without needing to register
 - [x] Submit a request to add additional categories
-- [x] Post their stories (with Markdown content) to the approved categories
+- [x] Post their stories to the approved categories
+    - [x] Support Markdown
 - [x] Edit their stories
     - [x] API Route
     - [x] UI
@@ -57,7 +58,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
     - [x] profile picture
     - [x] a list of their stories
     - [x] A list of stories that they are following
-- [ ] filter to search for stories
+- [x] filter to search for stories
 - [x] Comment on stories
 - [ ] Save their stories draft (Stretch Goal)
 - [ ] Welcome Email after account creation (Stretch Goal)

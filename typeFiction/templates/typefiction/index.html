@@ -3,6 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
+    {% include 'typefiction/components/filter.html' %}
     {% for story in stories%}
         {% if story.chapters.count > 0 %}
             {% include 'typefiction/components/thread.html' %}
