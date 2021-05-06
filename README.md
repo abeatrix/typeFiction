@@ -1,7 +1,7 @@
 # typeFiction
 An online platform for amateur writers to publish their stories.
 
-<img src="finalproject/public/images/10.png" width="100%"></img>
+<img src="finalproject/public/images/frontpage.png" width="100%"></img>
 
 ## Project requirements
 - Your web application must utilize Django (including at least one model) on the back-end and JavaScript on the front-end.
