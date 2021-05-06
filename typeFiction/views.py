@@ -293,10 +293,10 @@ def follows(request, user_id):
             following = request.user.profile.following.all()
             if user in following:
                 request.user.profile.following.remove(user_id)
-                return JsonResponse({"msg": "Follow"})
+                return JsonResponse({"msg": "Follow"}, status=200)
             else:
                 request.user.profile.following.add(user_id)
-                return JsonResponse({"msg": "Unfollow"})
+                return JsonResponse({"msg": "Unfollow"}, status=200)
         JsonResponse({"error": "Cannot follow yourself."}, status=400)
     # GET method to check follower status
     # then have frontend display accordingly
@@ -304,9 +304,9 @@ def follows(request, user_id):
         user = User.objects.get(id=user_id)
         following = request.user.profile.following.all()
         if user in following:
-            return JsonResponse({"msg": "Unfollow"})
+            return JsonResponse({"msg": "Unfollow"}, status=200)
         else:
-            return JsonResponse({"msg": "Follow"})
+            return JsonResponse({"msg": "Follow"}, status=200)
     return redirect("/")
 
 
@@ -325,12 +325,12 @@ def likes(request, story_id):
         if request.user in story.likes.all():
             story.likes.remove(request.user)
             count = story.likes.count()
-            return JsonResponse({"likes": count})
+            return JsonResponse({"likes": count}, status=200)
         # like
         else:
             story.likes.add(request.user)
             count = story.likes.count()
-            return JsonResponse({"likes": count})
+            return JsonResponse({"likes": count}, status=200)
     return JsonResponse({"error": "PUT request only"}, status=400)
 
 # ADD TO WATCHLIST
@@ -352,6 +352,6 @@ def watchlist(request, story_id):
             else:
                 story.watchlist.add(request.user)
                 msg = "Remove from Watchlist"
-            return JsonResponse({"msg": msg, "count": story.watchlist.count()})
+            return JsonResponse({"msg": msg, "count": story.watchlist.count()}, status=200)
         JsonResponse({"error": "Cannot add your own story to watchlist."}, status=400)
     return redirect("/")
