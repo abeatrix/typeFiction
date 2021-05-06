@@ -1,5 +1,7 @@
+{% load static %}
+
 {% if user.is_authenticated %}
-<form class="p-2" method="POST" action="{% url "submit_cat" %}">
+<form class="p-2 d-none" id="new-cat-form" method="POST" action="{% url "submit_cat" %}">
     {% csrf_token %}
     <label for="msg" class="form-label">New Category</label>
     <input type="text" class="form-control" placeholder="Category" name="name" id="msg">
@@ -8,3 +10,5 @@
     </div>
 </form>
 {% endif %}
+
+<script src="{% static 'typeFiction/newStory.js' %}"></script>

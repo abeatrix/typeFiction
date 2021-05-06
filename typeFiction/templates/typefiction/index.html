@@ -3,10 +3,6 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-    <!-- {% if user.is_authenticated %}
-        {% include 'typefiction/components/newCat.html' %}
-        {% include 'typefiction/components/newStory.html' %}
-    {% endif %} -->
     {% for story in stories%}
         {% if story.chapters.count > 0 %}
             {% include 'typefiction/components/thread.html' %}

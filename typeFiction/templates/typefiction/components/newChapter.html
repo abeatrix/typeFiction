@@ -1,5 +1,7 @@
+{% load static %}
+
 {% if user.is_authenticated %}
-<button class="btn btn-primary w-100" id="new-chapter-btn">Add New Chapter</button>
+<button class="btn btn-outline-primary w-100" id="new-chapter-btn">Add New Chapter</button>
 <form class="p-2 d-none" method="POST" action="{% url "submit_chapter" story.id %}" id="new-chapter-form">
     {% csrf_token %}
     <input type="text" class="form-control" placeholder="Chapter {{story.chapters.count|add:"1"}}:" name="chapter" id="msg">
@@ -10,11 +12,5 @@
 </form>
 {% endif %}
 
-<script>
-    $("#new-chapter-btn").click(function(){
-        $("#new-chapter-form").toggleClass("d-none")
-        const word = $('#new-chapter-btn').text();
-        $('#new-chapter-btn').text(
-            word == "Add New Chapter" ? "Close" : "Add New Chapter");
-    })
-</script>
+
+<script src="{% static 'typeFiction/newChap.js' %}"></script>
