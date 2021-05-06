@@ -6,8 +6,9 @@
     {% for c in chapters %}
     {% include 'typefiction/components/chapter.html' %}
     {% endfor %}
+
     {% if request.user == story.author %}
-        {% include 'typefiction/components/newChapter.html' %}
+    {% include 'typefiction/components/newChapter.html' %}
     {% endif %}
     <div class="container my-3">
         <a name="reviews"><h3 class="border-bottom mb-3">Reviews</h3></a>
@@ -19,7 +20,7 @@
         </div>
         {% endfor %}
     {% else %}
-        <p>There is no review yet...</p>
+        <p class="mb-5">There is no review yet...</p>
     {% endif %}
     </div>
     {% if user.is_authenticated %}

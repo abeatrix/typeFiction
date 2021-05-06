@@ -3,7 +3,8 @@
 
 {% block body %}
     {% if user.is_authenticated %}
-        {% include 'typefiction/components/newCat.html' %}
         {% include 'typefiction/components/newStory.html' %}
     {% endif %}
 {% endblock %}
+
+<script src="{% static 'typeFiction/newStory.js' %}"></script>

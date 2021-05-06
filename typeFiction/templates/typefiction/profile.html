@@ -3,13 +3,9 @@
 {% block title %}: {{profile}}'s profile{% endblock %}
 
 {% block body %}
-    <div class="row my-3">
-        <div class="col-1" id='profile-img'>
-            {% if profile.image %}
-            <img id="profile-picture-{{profile.id}}" width="100%" src="{{profile.image}}"></img>
-            {% else %}
-            <img id="profile-picture-{{profile.id}}" width="100%" src="https://i.ibb.co/d400nvn/pp.png"></img>
-            {% endif %}
+    <div class="row my-3 ">
+        <div class="col-1 " id='profile-img'>
+            <img id="profile-picture-{{profile.id}}" class="pp img-fluid" src="{{profile.image}}"></img>
         </div>
         <div class="col" id='profile-details'>
             <h3 id="profile-card-{{profile.id}}"><span id="profile-name">{{profile}}</span>'s profile</h3> 
@@ -80,6 +76,7 @@
         const img_input = document.createElement('input');
         img_input.type = "url"
         img_input.id = "img_url"
+        img_input.classList.add("form-control");
         img_input.required = true;
         img_input.placeholder = "Enter an image url here"
         profile_div.append(img_input)

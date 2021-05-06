@@ -11,6 +11,11 @@ class Story_Form(ModelForm):
     class Meta:
         model = Story
         fields = ['category', 'title', 'description']
+    
+    # sort dropdown menu in alphabetical order
+    def __init__(self, *args, **kwargs):
+        super(Story_Form, self).__init__(*args, **kwargs)
+        self.fields['category'].queryset = self.fields['category'].queryset.order_by('name')
 
 # Form for creating Chapter in Story
 class Chapter_Form(ModelForm):

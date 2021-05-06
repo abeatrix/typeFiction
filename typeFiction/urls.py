@@ -13,6 +13,7 @@ urlpatterns = [
     path("profile/edit/<int:user_id>", views.profile_edit, name="profile_edit"),
     path("submit_cat", views.submit_cat, name="submit_cat"),
     # STORY
+    path("category/<int:cat_id>", views.filters, name="filters"),
     path("submit_story", views.submit_story, name="submit_story"),
     path("story/<int:story_id>", views.story, name="story"),
     path("story/edit/<int:story_id>", views.story_edit, name="story_edit"),

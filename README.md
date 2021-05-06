@@ -22,7 +22,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 
 ## Features
 - [x] PostgreSQL
-- [ ] jQuery
+- [x] jQuery
 - [x] User Auth (Login, Logout)
 - [x] Models/Schema
     - [x] Profile
@@ -32,19 +32,20 @@ I wanted to use React.js for the frontend initially but realized React.js would 
     - [x] Category
 - [x] Browse and Read stories without needing to register
 - [x] Submit a request to add additional categories
-- [x] Post their stories (with Markdown content) to the approved categories
+- [x] Post their stories to the approved categories
+    - [x] Support Markdown
 - [x] Edit their stories
     - [x] API Route
     - [x] UI
-- [ ] Delete stories 
+- [x] Delete stories 
     - [x] API Route
-    - [ ] UI
+    - [x] UI
 - [x] Edit their chapter
     - [x] API Route
     - [x] UI
-- [ ] Delete Chapter
+- [x] Delete Chapter
     - [x] API Route
-    - [ ] UI
+    - [x] UI
 - [x] Edit their profile
     - [x] API Route
     - [x] UI
@@ -57,7 +58,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
     - [x] profile picture
     - [x] a list of their stories
     - [x] A list of stories that they are following
-- [ ] filter to search for stories
+- [x] filter to search for stories
 - [x] Comment on stories
 - [ ] Save their stories draft (Stretch Goal)
 - [ ] Welcome Email after account creation (Stretch Goal)
@@ -74,6 +75,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
         - normal template files
 
 ## Design Decisions
+- Category is unique
 - create reusable components / libraries that can be reused throughout the app
 - JavaScript is includes within each component instead of in separated static folder because I want to take advantage of the django templates tags
 

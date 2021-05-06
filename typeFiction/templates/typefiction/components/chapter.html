@@ -5,7 +5,7 @@
         <button class="d-inline btn btn-success mr-1" id="chapter-edit-{{c.id}}">Edit</button>
         <button class="d-inline btn btn-danger mr-1" id="chapter-delete-{{c.id}}">Delete</button>
         {% endif %}
-        <h1 class="d-inline" id="chapter-title-{{c.id}}">Chapter {{forloop.counter}}: {{c.chapter}}</h1>
+        <h1 class="d-inline" id="chapter-number-{{c.id}}">Chapter {{forloop.counter}}: <span id="chapter-title-{{c.id}}">{{c.chapter}}</span></h1>
     </div>
     <p id="chapter-content-{{c.id}}">{{c.content| safe }}</p>
 </div>
@@ -44,6 +44,8 @@
         const cContent = document.querySelector(`#chapter-content-${chapter_id}`);
         const cContentInput = document.createElement('textarea');
         cContentInput.id = `cDesc-input-${chapter_id}`;
+        cContentInput.classList.add("form-control");
+        cContentInput.rows = "30";
         cContentInput.required = true;
         cContentInput.value = cContent.innerHTML;
         // swap title and content with input areas

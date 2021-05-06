@@ -1,13 +1,26 @@
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block body %}
     {% if user.is_authenticated %}
+    <form class="p-2 d-none" id="new-cat-form" method="POST" action="{% url "submit_cat" %}">
+        {% csrf_token %}
+        <label for="msg" class="form-label">New Category</label>
+        <input type="text" class="form-control" placeholder="Category" name="name" id="msg">
+        <div class="text-right py-2">
+            <button type="submit" class="btn btn-primary w-100 p-2">Submit</button>
+        </div>
+    </form>
+
+    <button id="create-new-cat" class="btn btn-link">Click here to create a new category!</button>
     <form class="p-2" method="POST" action="{% url "submit_story" %}">
         {% csrf_token %}
         {{ form|crispy }}
         <div class="text-right py-2">
-            <button type="submit" class="btn btn-primary rounded-pill p-2">Submit</button>
+            <button type="submit" class="btn btn-primary w-100 p-2">Submit</button>
         </div>
     </form>
     {% endif %}
 {% endblock %}
+
+<script src="{% static 'typeFiction/newStory.js' %}"></script>

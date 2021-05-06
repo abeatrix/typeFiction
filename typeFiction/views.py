@@ -16,6 +16,7 @@ from .forms import Story_Form, Comment_Form, Chapter_Form, Profile_Form
 def index(request):
     form = Story_Form()
     story_list = Story.objects.all()
+    cats = Category.objects.order_by('name')
     page = request.GET.get('page', 1)
     paginator = Paginator(story_list, 20)
     try:
@@ -24,21 +25,33 @@ def index(request):
         stories = paginator.page(1)
     except EmptyPage:
         stories = paginator.page(paginator.num_pages)
-    context = {'form': form, 'stories': stories}
+    context = {'form': form, 'stories': stories, 'cats': cats}
     return render(request, "typefiction/index.html",context)
 
-
+def filters(request, cat_id):
+    if request.method == "POST":
+        story_list = Story.objects.filter(category_id=cat_id)
+        form = Story_Form()
+        cats = Category.objects.order_by('name')
+        page = request.GET.get('page', 1)
+        paginator = Paginator(story_list, 20)
+        try:
+            stories = paginator.page(page)
+        except PageNotAnInteger:
+            stories = paginator.page(1)
+        except EmptyPage:
+            stories = paginator.page(paginator.num_pages)
+        context = {'form': form, 'stories': stories, 'cats': cats}
+        return render(request, "typefiction/index.html",context)
 
 # ------- AUTH -------#
 
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
-
         # Check if authentication successful
         if user is not None:
             login(request, user)
@@ -60,7 +73,6 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -68,7 +80,6 @@ def register(request):
             return render(request, "typefiction/register.html", {
                 "message": "Passwords must match."
             })
-
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
@@ -95,7 +106,7 @@ def submit_cat(request):
     # Create new Category
     cat = Category(name = request.POST.get("name"))
     cat.save()
-    return redirect("/")
+    return redirect("/new")
 
 
 

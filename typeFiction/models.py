@@ -32,7 +32,7 @@ class Category(models.Model):
 # Story
 class Story(models.Model):
     title = models.TextField(max_length=50, default=None)
-    description = models.TextField(max_length=250, default=None)
+    description = models.TextField(max_length=250, default=None, unique=True)
     cover = models.URLField()
     completed = models.BooleanField(default=False)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True, related_name='category')
@@ -51,7 +51,7 @@ class Story(models.Model):
 # Chapter
 class Chapter(models.Model):
     chapter = models.CharField(max_length=100)
-    content = models.TextField(max_length=9999)
+    content = models.TextField(max_length=9999, unique=True)
     post_date = models.DateTimeField(auto_now_add=True)
     story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name="chapters")
     
