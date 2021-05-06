@@ -44,6 +44,8 @@
         const cContent = document.querySelector(`#chapter-content-${chapter_id}`);
         const cContentInput = document.createElement('textarea');
         cContentInput.id = `cDesc-input-${chapter_id}`;
+        cContentInput.classList.add("form-control");
+        cContentInput.rows = "30";
         cContentInput.required = true;
         cContentInput.value = cContent.innerHTML;
         // swap title and content with input areas
