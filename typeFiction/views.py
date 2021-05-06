@@ -95,7 +95,7 @@ def submit_cat(request):
     # Create new Category
     cat = Category(name = request.POST.get("name"))
     cat.save()
-    return redirect("/")
+    return redirect("/new")
 
 
 

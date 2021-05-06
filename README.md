@@ -22,7 +22,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 
 ## Features
 - [x] PostgreSQL
-- [ ] jQuery
+- [x] jQuery
 - [x] User Auth (Login, Logout)
 - [x] Models/Schema
     - [x] Profile
@@ -36,15 +36,15 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 - [x] Edit their stories
     - [x] API Route
     - [x] UI
-- [ ] Delete stories 
+- [x] Delete stories 
     - [x] API Route
-    - [ ] UI
+    - [x] UI
 - [x] Edit their chapter
     - [x] API Route
     - [x] UI
-- [ ] Delete Chapter
+- [x] Delete Chapter
     - [x] API Route
-    - [ ] UI
+    - [x] UI
 - [x] Edit their profile
     - [x] API Route
     - [x] UI
