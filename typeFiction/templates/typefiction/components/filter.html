@@ -4,6 +4,6 @@
 {% for cat in cats %}
 <form class="d-inline" method="POST" action="{% url "filters" cat.id %}">
     {% csrf_token %}
-    <button type="submit" class="btn btn-outline-info">{{cat}} ({{cat.category.count}})</button>
+    <button type="submit" class="btn btn-outline-info m-1">{{cat}} ({{cat.category.count}})</button>
 </form>
 {% endfor %}

@@ -75,6 +75,7 @@ I wanted to use React.js for the frontend initially but realized React.js would 
         - normal template files
 
 ## Design Decisions
+- Category is unique
 - create reusable components / libraries that can be reused throughout the app
 - JavaScript is includes within each component instead of in separated static folder because I want to take advantage of the django templates tags
 
