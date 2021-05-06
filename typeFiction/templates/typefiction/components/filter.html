@@ -1,5 +1,5 @@
 <form class="d-inline" action="{% url 'index' %}">
-    <button type="submit" class="btn btn-outline-info">All</button>
+    <button type="submit" class="btn btn-outline-info">All ({{stories|length }})</button>
 </form>
 {% for cat in cats %}
 <form class="d-inline" method="POST" action="{% url "filters" cat.id %}">

@@ -18,7 +18,7 @@ def index(request):
     story_list = Story.objects.all()
     cats = Category.objects.order_by('name')
     page = request.GET.get('page', 1)
-    paginator = Paginator(story_list, 20)
+    paginator = Paginator(story_list, 10)
     try:
         stories = paginator.page(page)
     except PageNotAnInteger:

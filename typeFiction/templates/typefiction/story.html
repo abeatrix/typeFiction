@@ -16,7 +16,7 @@
         {% for com in comments %}
         <div  class="border-bottom">
             <p>{{com.comment}}</p>
-            <small>Reviewed by {{com.user}} {{com.post_date|timesince}} ago</small>
+            <small>Reviewed by <a href="{% url "profile" com.user.id %}" id="author-link">{{com.user}}</a> {{com.post_date|timesince}} ago</small>
         </div>
         {% endfor %}
     {% else %}
