@@ -9,7 +9,15 @@
         </div>
         <div class="col" id='profile-details'>
             <h3 id="profile-card-{{profile.id}}"><span id="profile-name">{{profile}}</span>'s profile</h3> 
-            <small id="profile-date">Member since {{profile.user.date_joined| date:"F d Y"}}</small> 
+            <small id="profile-date">Member since {{profile.user.date_joined| date:"F d Y"}}</small>
+            <div class="row d-none" id="pp-url-input">
+                <div class="col">
+                    <input type="text" id="edit-img-box" class="form-control" name="image" placeholder="Enter an image url here" required>
+                </div>
+                <div class="col">
+                    <button id="pp-update-btn" class="btn btn-link">Submit</button>
+                </div>
+            </div>
         </div>
 
         <div class="col-2 text-left" id='profile-btns'>
@@ -58,54 +66,35 @@
 
         {% if request.user.id != profile.id and user.is_authenticated %} 
         follow_status(profile_id)
-        document.querySelector('#follow-btn-{{profile.id}}').addEventListener('click', () => go_follow(profile_id));
+        $('#follow-btn-{{profile.id}}').click(() => go_follow(profile_id));
         {% endif %}
 
         // LISTEN TO CLICK ON EDIT BUTTON IF REQUEST USER IS THE PROFILE OWNER
         {% if request.user.id == profile.id %}
-        document.querySelector('#edit-btn-{{profile.id}}').addEventListener('click', () => go_edit(profile_id));
+        $(`#edit-btn-{{profile.id}}`).click(() => go_edit(profile_id));
         {% endif %}
     });
 
     // EDIT PROFILE BUTTON
-    function go_edit(){
-        // select edit button by element id
-        const edit = document.querySelector(`#edit-btn-{{profile.id}}`);
-        // create input box for profile image
-        const profile_div = document.querySelector(`#profile-details`);
-        const img_input = document.createElement('input');
-        img_input.type = "url"
-        img_input.id = "img_url"
-        img_input.classList.add("form-control");
-        img_input.required = true;
-        img_input.placeholder = "Enter an image url here"
-        profile_div.append(img_input)
-        // create submit button
-        const submit_btn = document.createElement('button');
-        submit_btn.id = `submit-btn`;
-        submit_btn.className = 'btn btn-success m-1';
-        submit_btn.innerHTML = 'Submit';
-        // switch edit button to submit button
-        edit.parentNode.replaceChild(submit_btn, edit)
-
-        // when the submit button is clicked
-        submit_btn.addEventListener('click', () => {
-            const new_img = document.querySelector(`#img_url`).value;
-            fetch(`/profile/edit/{{request.user.id}}`, {
-                method: 'POST', 
-                body: JSON.stringify({
-                    image: new_img
+    function go_edit(profile_id){
+        // make input box appears
+        $(`#pp-url-input`).toggleClass("d-none");
+        // when submit button is clicked
+        $(`#pp-update-btn`).click(function(){
+            const new_uri = $(`#edit-img-box`).val();
+            fetch(`/profile/edit/${profile_id}`, {
+            method: 'POST', 
+            body: JSON.stringify({
+                image: new_uri
                 })
             })
             .then(data=>{
-                document.querySelector('#profile-picture-{{profile.id}}').src = new_img;
-                img_input.remove()
-                submit_btn.parentNode.replaceChild(edit, submit_btn)
+                console.log(new_uri)
+                $(`#profile-picture-${profile_id}`).attr("src", new_uri);
+                $(`#pp-url-input`).toggleClass("d-none");
             })
-            .then(res=>console.log(res))
             .catch(err=>console.log(err));
         })
-
     }
 
 
