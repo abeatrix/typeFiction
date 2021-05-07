@@ -29,7 +29,7 @@ SECRET_KEY = 'f$4o-%_@cg$zu7bd-2-0anals!%at=u6cv(wb-pc5=emrrejg&123'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'typefiction.herokuapp.com/']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'typefiction.herokuapp.com']
 
 
 # Application definition
