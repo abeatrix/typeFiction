@@ -1,5 +1,7 @@
-finalproject/settings.py
-finalproject/__pycache__
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
 db.sqlite3
-typeFiction/migrations
-typeFiction/__pycache__
+venv/
