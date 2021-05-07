@@ -28,6 +28,8 @@ def index(request):
     context = {'form': form, 'stories': stories, 'cats': cats}
     return render(request, "typefiction/index.html",context)
 
+
+# FILTER BY CATEGORY IN HOME PAGE
 def filters(request, cat_id):
     if request.method == "POST":
         story_list = Story.objects.filter(category_id=cat_id)
@@ -102,7 +104,7 @@ def register(request):
 def submit_cat(request):
     # Must be request via POST
     if request.method != "POST":
-        return JsonResponse({"error": "POST request only."}, status=400)
+        return JsonResponse({"err": "POST request only."}, status=400)
     # Create new Category
     cat = Category(name = request.POST.get("name"))
     cat.save()
@@ -138,7 +140,7 @@ def new(request):
 def submit_story(request):
     # Must be request via POST
     if request.method != "POST":
-        return JsonResponse({"error": "POST request only."}, status=400)
+        return JsonResponse({"err": "POST request only."}, status=400)
     # Create new story
     form = Story_Form(request.POST)
     if form.is_valid():
@@ -162,7 +164,7 @@ def story_edit(request, story_id):
         story.description = story_form["description"]
         story.save()
         return JsonResponse({"msg": "done"})
-    return JsonResponse({"msg": "unable to update"})
+    return JsonResponse({"err": "unable to update"})
 
 
 # DELETE STORY
@@ -174,7 +176,7 @@ def delete_story(request, story_id):
         if story.author == request.user:
             story.delete()
             return JsonResponse({"msg": "done"})
-    return JsonResponse({"msg": "unable to delete"})
+    return JsonResponse({"err": "unable to delete"})
 
 
 # Create new Chapter
@@ -182,7 +184,7 @@ def delete_story(request, story_id):
 def submit_chapter(request, story_id):
     # Must be request via POST
     if request.method != "POST":
-        return JsonResponse({"error": "POST request only."}, status=400)
+        return JsonResponse({"err": "POST request only."}, status=400)
     # Create new chapter
     n = request.POST["chapter"]
     c = request.POST["content"]
@@ -206,7 +208,7 @@ def chapter_edit(request, chapter_id):
         chapter.content = chapter_form["content"]
         chapter.save()
         return JsonResponse({"msg": "done"})
-    return JsonResponse({"msg": "unable to update"})
+    return JsonResponse({"err": "unable to update"})
 
 # DELETE CHAPTER
 @login_required
@@ -217,7 +219,7 @@ def delete_chapter(request, chapter_id):
         if chapter.story.author == request.user:
             chapter.delete()
         return JsonResponse({"msg": "done"})
-    return JsonResponse({"msg": "unable to delete"})
+    return JsonResponse({"err": "unable to delete"})
 
 
 # ------- COMMENTS / REVIEWS -------#
@@ -267,15 +269,17 @@ def profile(request, user_id):
 @csrf_exempt
 @login_required
 def profile_edit(request, user_id):
-    # Must be request via PUT
-    profile = Profile.objects.get(id=user_id)
-    # TO UPDATE THE NEWLY EDITED STORY
-    if request.method == "POST" and request.user.id == profile.user.id:
+    # TO UPDATE THE NEWLY EDITED PROFILE
+    if request.method == "POST" and request.user.id == user_id:
+        try:
+            profile = Profile.objects.get(id=user_id)
+        except Profile.DoesNotExis:
+            JsonResponse({"err": "Cannot find user."}, status=400)
         new_img = json.loads(request.body)
         profile.image = new_img["image"]
         profile.save()
         return JsonResponse({"msg": "done"})
-    return JsonResponse({"msg": "unable to update"})
+    return JsonResponse({"err": "unable to update"}, status=500)
 
 
 # FOLLOWS
@@ -289,7 +293,7 @@ def follows(request, user_id):
             try:
                 user = User.objects.get(id=user_id)
             except User.DoesNotExist:
-                JsonResponse({"error": "Cannot find user."}, status=400)
+                JsonResponse({"err": "Cannot find user."}, status=400)
             following = request.user.profile.following.all()
             if user in following:
                 request.user.profile.following.remove(user_id)
@@ -297,7 +301,7 @@ def follows(request, user_id):
             else:
                 request.user.profile.following.add(user_id)
                 return JsonResponse({"msg": "Unfollow"}, status=200)
-        JsonResponse({"error": "Cannot follow yourself."}, status=400)
+        JsonResponse({"err": "Cannot follow yourself."}, status=400)
     # GET method to check follower status
     # then have frontend display accordingly
     elif request.method == "GET":
@@ -320,7 +324,7 @@ def likes(request, story_id):
         try:
             story = Story.objects.get(id=story_id)
         except Story.DoesNotExist:
-            JsonResponse({"error": "Cannot find story."}, status=400)
+            JsonResponse({"err": "Cannot find story."}, status=400)
         # If user already liked the story => unlike
         if request.user in story.likes.all():
             story.likes.remove(request.user)
@@ -331,7 +335,7 @@ def likes(request, story_id):
             story.likes.add(request.user)
             count = story.likes.count()
             return JsonResponse({"likes": count}, status=200)
-    return JsonResponse({"error": "PUT request only"}, status=400)
+    return JsonResponse({"err": "PUT request only"}, status=400)
 
 # ADD TO WATCHLIST
 @csrf_exempt
@@ -342,7 +346,7 @@ def watchlist(request, story_id):
         try:
             story = Story.objects.get(id=story_id)
         except Story.DoesNotExist:
-            JsonResponse({"error": "Cannot find story."}, status=400)
+            JsonResponse({"err": "Cannot find story."}, status=400)
         # users cannot follow themselves
         if request.user.id != story.author.id:
             watchers= story.watchlist.all()
@@ -353,5 +357,5 @@ def watchlist(request, story_id):
                 story.watchlist.add(request.user)
                 msg = "Remove from Watchlist"
             return JsonResponse({"msg": msg, "count": story.watchlist.count()}, status=200)
-        JsonResponse({"error": "Cannot add your own story to watchlist."}, status=400)
+        JsonResponse({"err": "Cannot add your own story to watchlist."}, status=400)
     return redirect("/")

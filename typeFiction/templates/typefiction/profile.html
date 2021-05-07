@@ -12,7 +12,7 @@
             <small id="profile-date">Member since {{profile.user.date_joined| date:"F d Y"}}</small>
             <div class="row d-none" id="pp-url-input">
                 <div class="col">
-                    <input type="text" id="edit-img-box" class="form-control" name="image" placeholder="Enter an image url here" required>
+                    <input type="url" id="edit-img-box" class="form-control" name="image" placeholder="Enter an image url here" required>
                 </div>
                 <div class="col">
                     <button id="pp-update-btn" class="btn btn-link">Submit</button>
@@ -88,11 +88,11 @@
                 image: new_uri
                 })
             })
-            .then(data=>{
-                console.log(new_uri)
-                $(`#profile-picture-${profile_id}`).attr("src", new_uri);
-                $(`#pp-url-input`).toggleClass("d-none");
+            .then(res=>res.json())
+            .then(res=>{
+                if(res.msg) $(`#profile-picture-${profile_id}`).attr("src", new_uri);
             })
+            .then(data=>{$(`#pp-url-input`).toggleClass("d-none");})
             .catch(err=>console.log(err));
         })
     }
@@ -110,9 +110,9 @@
             method: 'PUT',
         })
         .then(res=>res.json())
-        .then(data=>{
+        .then(res=>{
             // update button text
-            f.innerHTML = data.msg
+            f.innerHTML = res.msg
             // update follower number
             numElm.innerHTML = f.innerHTML === "Follow" ? num-1 : num+1;
         })
@@ -128,9 +128,9 @@
             method: 'GET',
         })
         .then(res=>res.json())
-        .then(data=>{
+        .then(res=>{
             // update button text
-            f.innerHTML = data.msg
+            f.innerHTML = res.msg
         })
         .catch(err=>console.log(err));
     }
