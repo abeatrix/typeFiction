@@ -86,10 +86,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'typefiction',
-        'USER': 'sourcegraph',
-        'PASSWORD': 'sourcegraph',
-        'HOST': '',
-        'PORT': '',
     }
 }
 
