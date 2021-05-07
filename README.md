@@ -11,7 +11,8 @@ An online platform for amateur writers to publish their stories.
 
 
 ## To start the app
-1. Setting.py + CRISPY_TEMPLATE_PACK = 'bootstrap4'
+1. python3 -m venv .env
+1. source .env/vin/active
 1. pip3 install -r requirements.txt
 1. Run `python3 manage.py makemigrations typeFiction` to make migrations for the typeFiction app.
 1. Run `python3 manage.py migrate` to apply migrations to your database.
