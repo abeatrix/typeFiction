@@ -93,7 +93,10 @@
                 if(res.msg) $(`#profile-picture-${profile_id}`).attr("src", new_uri);
             })
             .then(data=>{$(`#pp-url-input`).toggleClass("d-none");})
-            .catch(err=>console.log(err));
+            .catch(err=>{
+                $(`#warning-box`).toggleClass("d-none");
+                $(`#warning-box`).append(`<p>${err}</p>`);
+            });
         })
     }
 
@@ -116,7 +119,10 @@
             // update follower number
             numElm.innerHTML = f.innerHTML === "Follow" ? num-1 : num+1;
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     }
 
     // CHECK IF THE REQUEST USER IS ALREADY FOLLOWING THE PROFILE OWNER
@@ -132,7 +138,10 @@
             // update button text
             f.innerHTML = res.msg
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+                $(`#warning-box`).toggleClass("d-none");
+                $(`#warning-box`).append(`<p>${err}</p>`);
+            });
     }
 </script>
 {% endblock %}

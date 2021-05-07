@@ -60,7 +60,10 @@
             l.innerHTML = data.likes;
             check_likes(story_id);
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     }
 
     function add_watchlist(story_id){
@@ -77,7 +80,10 @@
             w.innerHTML = data.count;
             check_watchlist(story_id);
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     }
 
     function check_likes(story_id){
@@ -103,7 +109,10 @@
         .then(()=>{
             document.querySelector(`#story-card-${story_id}`).remove()
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     }
 
     // EDIT STORY
@@ -154,7 +163,10 @@
             story_desc_input.parentNode.replaceChild(story_desc_el, story_desc_input)
             story_submit_btn.remove()
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     })
 
 }
