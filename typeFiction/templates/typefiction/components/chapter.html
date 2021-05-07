@@ -79,7 +79,10 @@
                 cContentInput.parentNode.replaceChild(cContent, cContentInput)
                 cSubmitBtn.remove()
             })
-            .catch(err=>console.log(err));
+            .catch(err=>{
+                $(`#warning-box`).toggleClass("d-none");
+                $(`#warning-box`).append(`<p>${err}</p>`);
+            });
         })
     }
 </script>

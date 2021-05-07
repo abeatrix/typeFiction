@@ -14,7 +14,7 @@
         </div>
         {% endif %}
     </div>
-    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Watchers: <span id="story-{{story.id}}-watch">{{story.watchlist.count}}</span>{% if request.user == story.author %} - <strong id="edit-story-{{story.id}}" class="text-success">Edit</strong> - <strong id="delete-story-{{story.id}}" class="text-danger">Delete</strong>{% endif %}</small>
+    <small>Category: {{story.category}} - Chapters: {{story.chapters.count}} - Published: {{story.post_date|timesince}} ago - Likes: <span id="story-{{story.id}}-likes">{{story.likes.count}}</span> - Watchers: <span id="story-{{story.id}}-watch">{{story.watchlist.count}}</span>{% if request.user == story.author %} - <strong id="edit-story-{{story.id}}" class="text-success cursor-pointer">Edit</strong> - <strong id="delete-story-{{story.id}}" class="text-danger cursor-pointer">Delete</strong>{% endif %}</small>
 </div>
 
 <!-- implement javascript to use django templates variable -->
@@ -60,7 +60,10 @@
             l.innerHTML = data.likes;
             check_likes(story_id);
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     }
 
     function add_watchlist(story_id){
@@ -77,7 +80,10 @@
             w.innerHTML = data.count;
             check_watchlist(story_id);
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     }
 
     function check_likes(story_id){
@@ -99,10 +105,14 @@
         fetch(`/story/delete/${story_id}`, {
             method: 'POST'
         })
+        .then(res=>res.json())
         .then(()=>{
             document.querySelector(`#story-card-${story_id}`).remove()
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     }
 
     // EDIT STORY
@@ -144,6 +154,7 @@
                 description: newStoryDesc
             })
         })
+        .then(res=>res.json())
         .then(data=>{
             story_title_el.innerHTML = newStoryTitle;
             story_desc_el.innerHTML = newStoryDesc;
@@ -152,7 +163,10 @@
             story_desc_input.parentNode.replaceChild(story_desc_el, story_desc_input)
             story_submit_btn.remove()
         })
-        .catch(err=>console.log(err));
+        .catch(err=>{
+            $(`#warning-box`).toggleClass("d-none");
+            $(`#warning-box`).append(`<p>${err}</p>`);
+        });
     })
 
 }
