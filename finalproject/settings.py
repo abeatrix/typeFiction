@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
-import django_on_heroku
+import django_heroku
 from django.test.utils import ignore_warnings
 ignore_warnings(message="No directory at", module="whitenoise.base").enable()
 
