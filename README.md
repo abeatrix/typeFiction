@@ -15,7 +15,9 @@ An online platform for amateur writers to publish their stories.
     - You can login as a test user:
         - username: demo
         - password: demo
-1. To run the app locally, typ the following commands in your terminal:
+1. To run the app locally, please follow the steps below:
+    1. Make sure to have Python and Postgres installed on your local machine 
+    1. The default `deployment` branch is using Postgres as the database. Please choose the `sqlite3` branch if you wish to continue with sqlite3 as the database.
     1. Run `python3 -m venv .env` to create a virtual environment
     1. Run `source .env/bin/activate` get into the virtual environment
     1. Run `pip3 install -r requirements.txt` to install required dependents
