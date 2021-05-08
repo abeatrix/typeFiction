@@ -21,36 +21,74 @@
         </div>
 
         <div class="col-2 text-left" id='profile-btns'>
-            {% if request.user.id != profile.id and user.is_authenticated %} 
+            {% if request.user.id != profile.user.id and user.is_authenticated %} 
             <div class="text-left in-line"><button id="follow-btn-{{profile.id}}" class="btn btn-primary mx-3">Follow</button></div> 
-            {% elif request.user.id == profile.id %}
+            {% elif request.user.id == profile.user.id %}
             <div class="text-left in-line my-2"><button id="edit-btn-{{profile.id}}" class="btn btn-primary mx-3">Edit Info</button></div> 
             {% endif %}
         </div>
     </div>
     
-    <h5 class="my-3"><a href="#profile-stories">{{stories|length}} Stories</a> | <a href="#following-stories"><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following</a> | <strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</h5>
+    <h5 class="my-3"><span id="stories-click-{{profile.id}}">{{stories|length}} Stories</span> | <span id="following-click-{{profile.id}}"><strong id="following-num-{{profile.id}}">{{following|length}}</strong> following</span> | <span id="followers-click-{{profile.id}}"><strong id="follower-num-{{profile.id}}">{{follower|length}}</strong> followers</span> | <span id="watchlist-click-{{profile.id}}"><strong id="watchlist-num-{{profile.id}}">{{watchlist|length}}</strong> watchlist</span></h5> 
 
-    <a name="profile-stories"></a>
-    <h5 class="my-5">Stories from {{profile.user}}</h5>
-    <div id="user-stories-all" class="my-5">
-    {% for story in stories%}
-            {% include 'typefiction/components/thread.html' %}
-    {% endfor %}
-    {% if not stories %}
-    <p>No story is available...</p>
-    {% endif %}
+    <div id="profile-stories">
+        <h5 class="my-5">Stories from {{profile.user}}</h5>
+        <div id="user-stories-all" class="my-5">
+        {% for story in stories%}
+                {% include 'typefiction/components/thread.html' %}
+        {% endfor %}
+        {% if not stories %}
+        <p>No story is available...</p>
+        {% endif %}
+        </div>
+    </div>
+
+    <div id="following">
+        <h5 class="my-5">Following Authors</h5>
+        <div id="following-all" class="my-5">
+        {% for author in following %}
+            <p><a href="{% url "profile" author.id %}" id="author-link">{{author}}</a></p>
+        {% endfor %}
+        {% if not following %}
+        <p>Not following anyone...</p>
+        {% endif %}
+        </div>
+    </div>
+
+    <div id="followers">
+        <h5 class="my-5">Followers</h5>
+        <div id="follower-all" class="my-5">
+        {% for u in follower %}
+            <p><a href="{% url "profile" u.id %}" id="author-link">{{u}}</a></p>
+        {% endfor %}
+        {% if not follower %}
+        <p>Not followed by anyone...</p>
+        {% endif %}
+        </div>
     </div>
     
-    <a name="following-stories"></a>
-    <h5 class="my-5">Stories from Following Authors</h5>
-    <div id="following-stories-all" class="my-5">
-    {% for story in following_stories%}
-        {% include 'typefiction/components/thread.html' %}
-    {% endfor %}
-    {% if not following_stories %}
-    <p>No story is available...</p>
-    {% endif %}
+    <div id="following-stories" class="d-none">
+        <h5 class="my-5">Stories from Following Authors</h5>
+        <div id="following-stories-all" class="my-5">
+        {% for story in following_stories%}
+            {% include 'typefiction/components/thread.html' %}
+        {% endfor %}
+        {% if not following_stories %}
+        <p>No story is available...</p>
+        {% endif %}
+        </div>
+    </div>
+
+    <div id="watchlist-stories">
+        <h5 class="my-5">Watchlist</h5>
+        <div id="watchlist-stories-all" class="my-5">
+        {% for story in watchlist %}
+            {% include 'typefiction/components/thread.html' %}
+        {% endfor %}
+        {% if not watchlist %}
+        <p>No story added to watchlist...</p>
+        {% endif %}
+        </div>
     </div>
     
 {% endblock %}
@@ -58,29 +96,71 @@
 
 
 {% block script %}
+
+
+<!-- SCRIPT -->
 <script>
     document.addEventListener("DOMContentLoaded", function(){
-        const profile_id = {{profile.id}}
+        const user_id = {{profile.user.id}}
+        // initial view
+        $(`#profile-stories`).css("display", "block");
+        $(`#following`).css("display", "none");
+        $(`#followers`).css("display", "none");
+        $(`#watchlist-stories`).css("display", "none");
 
-        {% if request.user.id != profile.id and user.is_authenticated %} 
-        follow_status(profile_id)
-        $('#follow-btn-{{profile.id}}').click(() => go_follow(profile_id));
+        {% if request.user.id != profile.user.id and user.is_authenticated %} 
+        follow_status(user_id)
+        $('#follow-btn-{{profile.id}}').click((e) => {
+            e.preventDefault();
+            go_follow(user_id)
+        });
         {% endif %}
 
         // LISTEN TO CLICK ON EDIT BUTTON IF REQUEST USER IS THE PROFILE OWNER
-        {% if request.user.id == profile.id %}
-        $(`#edit-btn-{{profile.id}}`).click(() => go_edit(profile_id));
+        {% if request.user.id == profile.user.id %}
+        $(`#edit-btn-{{profile.id}}`).click(() => go_edit(user_id));
         {% endif %}
+
+        // toggle between views
+        $(`#stories-click-{{profile.id}}`).click(()=>{
+            $(`#profile-stories`).css("display", "block");
+            $(`#following`).css("display", "none");
+            $(`#followers`).css("display", "none");
+            $(`#watchlist-stories`).css("display", "none");
+        })
+
+        $(`#following-click-{{profile.id}}`).click(()=>{
+            $(`#profile-stories`).css("display", "none");
+            $(`#following`).css("display", "block");
+            $(`#followers`).css("display", "none");
+            $(`#watchlist-stories`).css("display", "none");
+        })
+
+        $(`#followers-click-{{profile.id}}`).click(()=>{
+            $(`#profile-stories`).css("display", "none");
+            $(`#following`).css("display", "none");
+            $(`#followers`).css("display", "block");
+            $(`#watchlist-stories`).css("display", "none");
+        })
+
+        $(`#watchlist-click-{{profile.id}}`).click(()=>{
+            $(`#profile-stories`).css("display", "none");
+            $(`#following`).css("display", "none");
+            $(`#followers`).css("display", "none");
+            $(`#watchlist-stories`).css("display", "block");
+        })
+
     });
 
     // EDIT PROFILE BUTTON
-    function go_edit(profile_id){
+    function go_edit(user_id){
+        
         // make input box appears
         $(`#pp-url-input`).toggleClass("d-none");
         // when submit button is clicked
         $(`#pp-update-btn`).click(function(){
             const new_uri = $(`#edit-img-box`).val();
-            fetch(`/profile/edit/${profile_id}`, {
+            fetch(`/profile/edit/`+user_id, {
             method: 'POST', 
             body: JSON.stringify({
                 image: new_uri
@@ -88,7 +168,7 @@
             })
             .then(res=>res.json())
             .then(res=>{
-                if(res.msg) $(`#profile-picture-${profile_id}`).attr("src", new_uri);
+                if(res.msg) $(`#profile-picture-{{profile.id}}`).attr("src", new_uri);
             })
             .then(data=>{$(`#pp-url-input`).toggleClass("d-none");})
             .catch(err=>{
@@ -100,14 +180,14 @@
 
 
     // FOLLOW BUTTON
-    function go_follow(profile_id){
+    function go_follow(user_id){
         // select follow button by element id
-        const f = document.querySelector(`#follow-btn-${profile_id}`);
+        const f = document.querySelector(`#follow-btn-{{profile.id}}`);
         // select follow number by element id
-        const numElm = document.querySelector(`#follower-num-${profile_id}`);
+        const numElm = document.querySelector(`#follower-num-{{profile.id}}`);
         const num = parseInt(numElm.innerHTML)
         // perform PUT
-        fetch('/follows/'+profile_id, {
+        fetch('/follows/'+user_id, {
             method: 'PUT',
         })
         .then(res=>res.json())
@@ -124,11 +204,11 @@
     }
 
     // CHECK IF THE REQUEST USER IS ALREADY FOLLOWING THE PROFILE OWNER
-    function follow_status(profile_id) {
+    function follow_status(user_id) {
         // select follow button by element id
-        const f = document.querySelector(`#follow-btn-${profile_id}`);
+        const f = document.querySelector(`#follow-btn-{{profile.id}}`);
         // perform GET
-        fetch('/follows/'+profile_id, {
+        fetch('/follows/'+user_id, {
             method: 'GET',
         })
         .then(res=>res.json())

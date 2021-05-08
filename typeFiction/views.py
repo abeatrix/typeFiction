@@ -253,15 +253,12 @@ def delete_comment(request, story_id, comment_id):
 
 # PROFILE PAGE
 def profile(request, user_id):
-    try:
-        profile = User.objects.get(id=user_id).profile
-        stories = Story.objects.filter(author_id=user_id).order_by("post_date")
-        following = list(profile.following.all())
-        following_stories = Story.objects.filter(author__in=following).filter(chapters__gt=0)
-        follower = Profile.objects.filter(following=profile.user)
-        watchlist = Story.objects.filter(watchlist_id=user_id).order_by("post_date")
-    except User.DoesNotExist:
-        return redirect("/")
+    profile = User.objects.get(id=user_id).profile
+    stories = Story.objects.filter(author_id=user_id).order_by("post_date")
+    following = list(profile.following.all())
+    following_stories = Story.objects.filter(author__in=following).filter(chapters__gt=0)
+    follower = Profile.objects.filter(following=profile.user)
+    watchlist = Story.objects.filter(watchlist=user_id).order_by("post_date")
     context = {'profile': profile, 'stories': stories, 'following': following, 'follower': follower, 'watchlist': watchlist, 'following_stories': following_stories}
     return render(request, 'typefiction/profile.html', context)
 

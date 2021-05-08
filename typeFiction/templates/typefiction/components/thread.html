@@ -95,9 +95,7 @@
 
     function check_watchlist(story_id){
         // select like icon by id
-        const w_icon = document.querySelector(`#watch-icon-${story_id}`);
-        // toggle between classes
-        w_icon.classList.contains("text-danger") ? w_icon.classList.remove("text-danger") : w_icon.classList.add("text-danger");
+        $(`#watch-icon-${story_id}`).toggleClass("text-danger");
     }
 
     // DELETE STORY
