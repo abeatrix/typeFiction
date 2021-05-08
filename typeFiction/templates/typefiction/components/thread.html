@@ -1,5 +1,5 @@
 {% load static %}
-<div class="container my-3 border border-primary" id="story-card-{{story.id}}">
+<div class="container my-3 p-3 border border-primary" id="story-card-{{story.id}}">
     <div class="row">
         <div class="col">
             <p><a href="{% url "story" story.id %}" id="story-title-link-{{story.id}}">{{story.title}}</a> <small>by </small><a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> {% if story.chapters.count%}<a class="text-success" href="{% url "story" story.id %}#reviews" id="story-review-link"><strong>reviews</strong></a>{% else %}<strong class="text-danger">Story with no chapter is not published</strong>{% endif %}</p>
@@ -124,6 +124,7 @@
     const story_title_input = document.createElement('input');
     story_title_input.type = "text"
     story_title_input.id = `new_story_title-${story_id}`;
+    story_title_input.classList.add("form-control");
     story_title_input.required = true;
     story_title_input.value = story_title_el.innerHTML;
     story_title_el.parentNode.replaceChild(story_title_input, story_title_el)
@@ -131,7 +132,8 @@
     const story_desc_el = document.querySelector(`#story-desc-${story_id}`);
     const story_desc_input = document.createElement('textarea');
     story_desc_input.id = `new_story_desc-${story_id}`
-    story_desc_input.row = "5"
+    story_desc_input.row = "3"
+    story_desc_input.classList.add("form-control");
     story_desc_input.required = true;
     story_desc_input.value = story_desc_el.innerHTML;
     story_desc_el.parentNode.replaceChild(story_desc_input, story_desc_el)
@@ -139,7 +141,7 @@
     const story_submit_btn = document.createElement('button');
     story_submit_btn.id = `submit-btn-${story_id}`;
     story_submit_btn.className = 'btn btn-success m-1';
-    story_submit_btn.innerHTML = 'Submit';
+    story_submit_btn.innerHTML = 'Update';
     // add submit button to UI
     story_div.append(story_submit_btn)
 

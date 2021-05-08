@@ -42,6 +42,9 @@
             {% include 'typefiction/components/thread.html' %}
         {% endif %}
     {% endfor %}
+    {% if not stories %}
+    <p>No story is available...</p>
+    {% endif %}
     </div>
     
     <a name="following-stories"></a>
@@ -53,6 +56,9 @@
             {% include 'typefiction/components/thread.html' %}
         {% endif %}
     {% endfor %}
+    {% if not following_stories %}
+    <p>No story is available...</p>
+    {% endif %}
     </div>
     
 {% endblock %}
