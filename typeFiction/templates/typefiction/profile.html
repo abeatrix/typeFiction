@@ -35,12 +35,7 @@
     <h5 class="my-5">Stories from {{profile.user}}</h5>
     <div id="user-stories-all" class="my-5">
     {% for story in stories%}
-    <!-- display stories with at least 1 chapter if they are not the author -->
-        {% if request.user.id != profile.id and story.chapters.count > 0 %}
             {% include 'typefiction/components/thread.html' %}
-        {% elif request.user.id == profile.id%}
-            {% include 'typefiction/components/thread.html' %}
-        {% endif %}
     {% endfor %}
     {% if not stories %}
     <p>No story is available...</p>
@@ -51,10 +46,7 @@
     <h5 class="my-5">Stories from Following Authors</h5>
     <div id="following-stories-all" class="my-5">
     {% for story in following_stories%}
-    <!-- display stories with at least 1 chapter if they are not the author -->
-        {% if story.chapters.count > 0 %}
-            {% include 'typefiction/components/thread.html' %}
-        {% endif %}
+        {% include 'typefiction/components/thread.html' %}
     {% endfor %}
     {% if not following_stories %}
     <p>No story is available...</p>
