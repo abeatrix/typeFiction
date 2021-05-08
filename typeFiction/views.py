@@ -15,7 +15,7 @@ from .forms import Story_Form, Comment_Form, Chapter_Form, Profile_Form
 # HOME PAGE
 def index(request):
     form = Story_Form()
-    story_list = Story.objects.all()
+    story_list = Story.objects.all().filter(chapters__gt=0)
     cats = Category.objects.order_by('name')
     page = request.GET.get('page', 1)
     paginator = Paginator(story_list, 10)
@@ -32,7 +32,7 @@ def index(request):
 # FILTER BY CATEGORY IN HOME PAGE
 def filters(request, cat_id):
     if request.method == "POST":
-        story_list = Story.objects.filter(category_id=cat_id)
+        story_list = Story.objects.filter(category_id=cat_id).filter(chapters__gt=0)
         form = Story_Form()
         cats = Category.objects.order_by('name')
         page = request.GET.get('page', 1)
