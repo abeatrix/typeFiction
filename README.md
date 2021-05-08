@@ -86,13 +86,17 @@ I wanted to use React.js for the frontend initially but realized React.js would 
 - When a user has signed up an account, a profile will be created for them automatically with a default profile picture
 - All story can be created with no chapter, but only stories with chapter will be displayed publicly
 - Author can edit and delete their own story and individual chapter
-- Logged in users can like and unlike a story
-    - This action will not trigger a reload of the page
-- Logged in users can follow different authors through their profile page, but they cannot follow their own account
+- Logged in users can like and unlike a story by clicking on the heart icon
+    - Author can like and dislike their own story
+    - This action will not trigger a reload of the page through toggling between classes via jQuery  
+- Logged in users can follow different authors through their profile page
+    - they cannot follow their own account
     - a list of following and followers can be found in their own profile
-    - This action will not trigger a reload of the page
-- Logged in users can add stories to their watchlist, where they can find them in their profile
-    - This action will not trigger a reload of the page
+    - This action will not trigger a reload of the page through toggling between classes via jQuery  
+- Logged in users can add stories to their watchlist by clicking on the eye icon
+    - they cannot add their own story to their watchlist
+    - they can find the watchlist in their profile
+    - This action will not trigger a reload of the page through toggling between classes via jQuery  
 - Logged in users can leave reviews for different stories
 - There are 4 views (index, new, profile, story) in total apart from Auth views (register and login)
     - Index View is the main view where user can see all the submitted stories
