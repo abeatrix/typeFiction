@@ -23,4 +23,9 @@
     {% endif %}
 {% endblock %}
 
-<script src="{% static 'typeFiction/newStory.js' %}"></script>
+<!-- <script src="{% static 'typeFiction/newStory.js' %}"></script> -->
+<script>
+    $("#create-new-cat").click(function(){
+        $("#new-cat-form").toggleClass("d-none")
+    })
+</script>

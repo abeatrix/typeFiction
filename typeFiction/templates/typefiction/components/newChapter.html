@@ -12,5 +12,14 @@
 </form>
 {% endif %}
 
+<!-- in page javascript because heroku doesn not server static files -->
+<!-- <script src="{% static 'typeFiction/newChap.js' %}"></script> -->
+<script>
+    $("#new-chapter-btn").click(function(){
+        $("#new-chapter-form").toggleClass("d-none")
+        const word = $('#new-chapter-btn').text();
+        $('#new-chapter-btn').text(
+            word == "Add New Chapter" ? "Close" : "Add New Chapter");
+    })
 
-<script src="{% static 'typeFiction/newChap.js' %}"></script>
+</script>
