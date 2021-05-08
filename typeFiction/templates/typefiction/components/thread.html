@@ -2,7 +2,7 @@
 <div class="container my-3 p-3 border border-primary" id="story-card-{{story.id}}">
     <div class="row">
         <div class="col">
-            <p><a href="{% url "story" story.id %}" id="story-title-link-{{story.id}}">{{story.title}}</a> <small>by </small><a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> {% if story.chapters.count%}<a class="text-success" href="{% url "story" story.id %}#reviews" id="story-review-link"><strong>reviews</strong></a>{% else %}<strong class="text-danger">Story with no chapter is not published</strong>{% endif %}</p>
+            <p><a href="{% url "story" story.id %}" id="story-title-link-{{story.id}}"><strong>{{story.title}}</strong></a> <small>by </small><a href="{% url "profile" story.author.id %}" id="author-link">{{story.author}}</a> {% if story.chapters.count%}<a class="text-success" href="{% url "story" story.id %}#reviews" id="story-review-link"><strong>reviews</strong></a>{% else %}<strong class="text-danger">Story with no chapter is not published</strong>{% endif %}</p>
             <p id="story-desc-{{story.id}}">{{story.description}}</p>
         </div>
         {% if user.is_authenticated %} 
