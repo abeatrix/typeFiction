@@ -6,3 +6,5 @@
 5. pip3 install django-crispy-forms
 6. pip3 install markdown2
 7. Setting.py + CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+Adding python
