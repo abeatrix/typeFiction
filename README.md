@@ -1,5 +1,5 @@
 # network
-1. Install python in your local env
+1. Install in your local env
 2. Run `python3 manage.py makemigrations typeFiction` to make migrations for the typeFiction app.
 3. Run `python3 manage.py migrate` to apply migrations to your database.
 4. Run `python3 manage.py runserver` to start server
